@@ -1,0 +1,19 @@
+@import '../../stylesheets/base';
+
+.home {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+
+    .header {
+        flex-shrink: 0;
+    }
+
+    .body {
+        flex-grow: 1;
+    }
+
+    .nav-bar {
+        flex-shrink: 0;
+    }
+}

@@ -1,49 +1,37 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import {
+    incomeSelector,
+    expenseSelector,
+} from '#redux/combined';
 import styles from './styles.scss';
 
+const mapStateToProps = state => ({
+    income: incomeSelector(state),
+    expense: expenseSelector(state),
+});
 
+@connect(mapStateToProps)
 export default class Dashboard extends React.PureComponent {
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
-
-    renderHeader = () => (
-        <div className={styles.header}>
-            Pennyworth
-        </div>
-    )
-
     renderBody = () => (
         <div className={styles.body}>
             <div className={styles.summary}>
-                <label>Total Income</label>
-                <span>100$</span>
+                <span>Total Income</span>
+                <span>{this.props.income}</span>
             </div>
             <div className={styles.summary}>
-                <label>Total Expense</label>
-                <span>105$</span>
+                <span>Total Expense</span>
+                <span>{this.props.expense}</span>
             </div>
-        </div>
-    )
-
-    renderFooter = () => (
-        <div className={styles.footer}>
-            <button>Add Income</button>
-            <button>Add Expense</button>
         </div>
     )
 
     render() {
-        const Header = this.renderHeader;
         const Body = this.renderBody;
-        const Footer = this.renderFooter;
 
         return (
             <div className={styles.dashboard}>
-                <Header />
                 <Body />
-                <Footer />
             </div>
         );
     }

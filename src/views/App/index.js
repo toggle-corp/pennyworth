@@ -1,6 +1,8 @@
 import React from 'react';
-import Auth from '#components/Auth';
-import Dashboard from '#views/Dashboard';
+import { HashRouter as Router, Route } from 'react-router-dom';
+
+import Home from '#views/Home';
+import EditActivity from '#views/EditActivity';
 
 
 export default class App extends React.PureComponent {
@@ -11,9 +13,12 @@ export default class App extends React.PureComponent {
 
     render() {
         return (
-            <Auth>
-                <Dashboard />
-            </Auth>
+            <Router>
+                <div>
+                    <Route exact path="/" component={Home} />
+                    <Route path="/edit-activity/:id?" component={EditActivity} />
+                </div>
+            </Router>
         );
     }
 }

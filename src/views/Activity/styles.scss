@@ -1,0 +1,36 @@
+@import '../../stylesheets/base';
+
+.activity {
+    display: flex;
+    flex-direction: column;
+    margin-top: 8px;
+
+    .item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 4px 16px;
+        text-decoration: none;
+        color: inherit;
+
+        .summary {
+            .title {
+                font-size: 18px;
+            }
+
+            .category {
+                color: $color-accent;
+                font-size: 14px;
+            }
+
+            .date {
+                color: $color-primary;
+                font-size: 12px;
+            }
+        }
+
+        .amount {
+            font-size: 20px;
+        }
+    }
+}

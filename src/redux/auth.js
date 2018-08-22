@@ -5,6 +5,7 @@ const initialData = {
     user: undefined,
 };
 
+export const userSelector = ({ auth }) => auth.user;
 
 const SET_USER = 'auth/SET_USER';
 
@@ -12,8 +13,6 @@ export const setUserAction = user => ({
     type: SET_USER,
     user,
 });
-
-export const userSelector = ({ auth }) => auth.user;
 
 const setUser = (state, action) => {
     const settings = {
