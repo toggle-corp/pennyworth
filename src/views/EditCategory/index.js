@@ -5,59 +5,57 @@ import { connect } from 'react-redux';
 import Faram, { requiredCondition } from '#rsci/Faram';
 import TextInput from '#rsci/TextInput';
 import SelectInput from '#rsci/SelectInput';
-import DateInput from '#rsci/DateInput';
 import PrimaryButton from '#rsca/Button/PrimaryButton';
 import DangerConfirmButton from '#rsca/ConfirmButton/DangerConfirmButton';
 
-import { categoryListSelector } from '#redux/categories';
 import {
-    activitiesSelector,
-    addActivityAction,
-    editActivityAction,
-    removeActivityAction,
-} from '#redux/activities';
+    categoriesSelector,
+    addCategoryAction,
+    editCategoryAction,
+    removeCategoryAction,
+} from '#redux/categories';
 
 import styles from './styles.scss';
 
 const propTypes = {
-    activityId: PropTypes.string,
-    activities: PropTypes.objectOf(PropTypes.object),
-    categories: PropTypes.arrayOf(PropTypes.object),
+    categoryId: PropTypes.string,
+    categories: PropTypes.objectOf(PropTypes.object),
     history: PropTypes.shape({
         goBack: PropTypes.func,
         replace: PropTypes.func,
     }).isRequired,
     routeState: PropTypes.shape({ fromApp: PropTypes.bool }),
-    addActivity: PropTypes.func.isRequired,
-    editActivity: PropTypes.func.isRequired,
-    deleteActivity: PropTypes.func.isRequired,
+    addCategory: PropTypes.func.isRequired,
+    editCategory: PropTypes.func.isRequired,
+    deleteCategory: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
-    activityId: undefined,
-    activities: {},
-    categories: [],
+    categoryId: undefined,
+    categories: {},
     routeState: {},
 };
 
 const mapStateToProps = (state, props) => ({
-    activityId: props.match.params.id,
+    categoryId: props.match.params.id,
     routeState: props.location.state,
-    categories: categoryListSelector(state),
-    activities: activitiesSelector(state),
+    categories: categoriesSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
-    addActivity: params => dispatch(addActivityAction(params)),
-    editActivity: params => dispatch(editActivityAction(params)),
-    deleteActivity: params => dispatch(removeActivityAction(params)),
+    addCategory: params => dispatch(addCategoryAction(params)),
+    editCategory: params => dispatch(editCategoryAction(params)),
+    deleteCategory: params => dispatch(removeCategoryAction(params)),
 });
 
-const CategoryKeySelector = c => (c || {}).id;
-const CategoryLabelSelector = c => (c || {}).title;
+
+const categoryFlowOptions = [
+    { key: 'in', label: 'In' },
+    { key: 'out', label: 'Out' },
+];
 
 @connect(mapStateToProps, mapDispatchToProps)
-export default class EditActivity extends React.PureComponent {
+export default class EditCategory extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -65,8 +63,8 @@ export default class EditActivity extends React.PureComponent {
         super(props);
 
         let initialData = {};
-        if (props.activityId) {
-            initialData = props.activities[props.activityId];
+        if (props.categoryId) {
+            initialData = props.categories[props.categoryId];
         }
 
         this.state = {
@@ -77,18 +75,16 @@ export default class EditActivity extends React.PureComponent {
         this.schema = {
             fields: {
                 title: [requiredCondition],
-                amount: [requiredCondition],
-                date: [requiredCondition],
-                category: [requiredCondition],
+                flow: [requiredCondition],
             },
         };
     }
 
     getTitle = () => {
-        if (this.props.activityId) {
-            return 'Edit activity';
+        if (this.props.categoryId) {
+            return 'Edit category';
         }
-        return 'Add activity';
+        return 'Add category';
     }
 
     goBack = () => {
@@ -100,13 +96,13 @@ export default class EditActivity extends React.PureComponent {
     }
 
     handleFaramSuccess = (values) => {
-        if (this.props.activityId) {
-            this.props.editActivity({
-                id: this.props.activityId,
+        if (this.props.categoryId) {
+            this.props.editCategory({
+                id: this.props.categoryId,
                 ...values,
             });
         } else {
-            this.props.addActivity(values);
+            this.props.addCategory(values);
         }
 
         this.goBack();
@@ -124,19 +120,21 @@ export default class EditActivity extends React.PureComponent {
     }
 
     handleDelete = () => {
-        if (!this.props.activityId) {
+        if (!this.props.categoryId) {
             return;
         }
 
-        this.props.deleteActivity({
-            id: this.props.activityId,
+        this.props.deleteCategory({
+            id: this.props.categoryId,
         });
         this.goBack();
     }
 
     renderHeader = () => (
         <div className={styles.header}>
-            <span> {this.getTitle()} </span>
+            <span>
+                {this.getTitle()}
+            </span>
         </div>
     )
 
@@ -155,33 +153,20 @@ export default class EditActivity extends React.PureComponent {
                 faramElementName="title"
                 label="Title"
             />
-            <TextInput
-                className={styles.formItem}
-                faramElementName="amount"
-                type="number"
-                label="Amount"
-            />
-            <DateInput
-                className={styles.formItem}
-                faramElementName="date"
-                label="Date"
-            />
             <SelectInput
                 className={styles.formItem}
-                faramElementName="category"
-                label="Category"
-                options={this.props.categories}
-                keySelector={CategoryKeySelector}
-                labelSelector={CategoryLabelSelector}
+                faramElementName="flow"
+                label="Flow"
+                options={categoryFlowOptions}
             />
             <div className={styles.footer}>
-                {!this.props.activityId && (
+                {!this.props.categoryId && (
                     <span />
                 )}
-                {this.props.activityId && (
+                {this.props.categoryId && (
                     <DangerConfirmButton
                         onClick={this.handleDelete}
-                        confirmationMessage="Are you sure you want to delete this activity?"
+                        confirmationMessage="Are you sure you want to delete this category?"
                         transparent
                     >
                         Delete
@@ -202,7 +187,7 @@ export default class EditActivity extends React.PureComponent {
         const Form = this.renderForm;
 
         return (
-            <div className={styles.editActivity}>
+            <div className={styles.editCategory}>
                 <Header />
                 <Form />
             </div>
