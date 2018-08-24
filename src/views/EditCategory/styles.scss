@@ -3,21 +3,25 @@
 .edit-category {
     .header {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
+        flex-direction: column;
+        justify-content: flex-end;
         padding: 0 16px;
-        height: 56px;
+        height: 72px;
         color: $color-primary;
-        font-size: 18px;
+        font-size: 24px;
 
-        > span {
-            border-bottom: 2px solid $color-accent;
-            padding: 4px 2px;
+        .back-button {
+            margin-bottom: 4px;
+            color: rgba(0, 0, 0, 0.2);
+            font-size: 28px;
         }
     }
 
     .form {
         display: flex;
         flex-direction: column;
+        margin: 32px 0;
 
         .form-item {
             margin: 4px 16px;
@@ -25,19 +29,8 @@
 
         .footer {
             display: flex;
-            justify-content: space-between;
-            margin: 4px 16px;
-        }
-    }
-}
-
-:global {
-    .confirm {
-        width: 80%;
-
-        .ok-button.button-primary {
-            background-color: #fff;
-            color: #000;
+            justify-content: flex-end;
+            margin: 32px 16px;
         }
     }
 }

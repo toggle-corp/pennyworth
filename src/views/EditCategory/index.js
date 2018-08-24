@@ -5,7 +5,8 @@ import { connect } from 'react-redux';
 import Faram, { requiredCondition } from '#rsci/Faram';
 import TextInput from '#rsci/TextInput';
 import SelectInput from '#rsci/SelectInput';
-import PrimaryButton from '#rsca/Button/PrimaryButton';
+import Button from '#rsca/Button';
+import AccentButton from '#rsca/Button/AccentButton';
 import DangerConfirmButton from '#rsca/ConfirmButton/DangerConfirmButton';
 
 import {
@@ -80,12 +81,7 @@ export default class EditCategory extends React.PureComponent {
         };
     }
 
-    getTitle = () => {
-        if (this.props.categoryId) {
-            return 'Edit category';
-        }
-        return 'Add category';
-    }
+    getTitle = () => 'Enter category details'
 
     goBack = () => {
         if (this.props.routeState.fromApp) {
@@ -132,6 +128,12 @@ export default class EditCategory extends React.PureComponent {
 
     renderHeader = () => (
         <div className={styles.header}>
+            <Button
+                className={styles.backButton}
+                onClick={this.goBack}
+                iconName="ion-arrow-left-c"
+                transparent
+            />
             <span>
                 {this.getTitle()}
             </span>
@@ -172,12 +174,12 @@ export default class EditCategory extends React.PureComponent {
                         Delete
                     </DangerConfirmButton>
                 )}
-                <PrimaryButton
+                <AccentButton
                     type="submit"
                     transparent
                 >
                     Save
-                </PrimaryButton>
+                </AccentButton>
             </div>
         </Faram>
     )

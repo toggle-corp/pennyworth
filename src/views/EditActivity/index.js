@@ -6,7 +6,8 @@ import Faram, { requiredCondition } from '#rsci/Faram';
 import TextInput from '#rsci/TextInput';
 import SelectInput from '#rsci/SelectInput';
 import DateInput from '#rsci/DateInput';
-import PrimaryButton from '#rsca/Button/PrimaryButton';
+import Button from '#rsca/Button';
+import AccentButton from '#rsca/Button/AccentButton';
 import DangerConfirmButton from '#rsca/ConfirmButton/DangerConfirmButton';
 
 import { categoryListSelector } from '#redux/categories';
@@ -84,12 +85,7 @@ export default class EditActivity extends React.PureComponent {
         };
     }
 
-    getTitle = () => {
-        if (this.props.activityId) {
-            return 'Edit activity';
-        }
-        return 'Add activity';
-    }
+    getTitle = () => 'Enter activity details'
 
     goBack = () => {
         if (this.props.routeState.fromApp) {
@@ -136,7 +132,15 @@ export default class EditActivity extends React.PureComponent {
 
     renderHeader = () => (
         <div className={styles.header}>
-            <span> {this.getTitle()} </span>
+            <Button
+                className={styles.backButton}
+                onClick={this.goBack}
+                iconName="ion-arrow-left-c"
+                transparent
+            />
+            <span>
+                {this.getTitle()}
+            </span>
         </div>
     )
 
@@ -187,12 +191,12 @@ export default class EditActivity extends React.PureComponent {
                         Delete
                     </DangerConfirmButton>
                 )}
-                <PrimaryButton
+                <AccentButton
                     type="submit"
                     transparent
                 >
                     Save
-                </PrimaryButton>
+                </AccentButton>
             </div>
         </Faram>
     )
