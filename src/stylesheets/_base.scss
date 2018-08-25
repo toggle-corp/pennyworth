@@ -14,33 +14,3 @@ $color-warning: #e0b652;
     padding: 0;
     font-family: $font-normal;
 }
-
-:global {
-    .confirm {
-        top: 94%;
-        margin: 0;
-        background-color: #fff;
-        width: 100%;
-
-        .modal-header {
-            display: none;
-        }
-
-        .modal-footer {
-            background-color: transparent;
-        }
-
-        .ok-button.button-primary, .cancel-button.button-default {
-            outline: 0;
-            border: 0;
-            box-shadow: none;
-            background-color: transparent;
-            min-width: auto;
-            color: $color-accent;
-        }
-
-        .cancel-button.button-default {
-            color: $color-danger;
-        }
-    }
-}

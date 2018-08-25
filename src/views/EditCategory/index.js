@@ -7,7 +7,8 @@ import TextInput from '#rsci/TextInput';
 import SelectInput from '#rsci/SelectInput';
 import Button from '#rsca/Button';
 import AccentButton from '#rsca/Button/AccentButton';
-import DangerConfirmButton from '#rsca/ConfirmButton/DangerConfirmButton';
+import DangerButton from '#rsca/Button/DangerButton';
+import ConfirmOnClick from '#components/ConfirmOnClick';
 
 import { iconNames } from '#rsk';
 
@@ -19,6 +20,9 @@ import {
 } from '#redux/categories';
 
 import styles from './styles.scss';
+
+
+const DangerConfirmButton = ConfirmOnClick(DangerButton);
 
 const propTypes = {
     categoryId: PropTypes.string,

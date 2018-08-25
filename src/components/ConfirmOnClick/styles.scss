@@ -1,0 +1,18 @@
+.confirm {
+    display: flex;
+    flex-direction: column;
+
+    .message {
+        padding: 8px 16px;
+    }
+
+    .footer {
+        display: flex;
+        justify-content: flex-end;
+        padding: 8px 16px;
+
+        button {
+            font-size: 14px;
+        }
+    }
+}
