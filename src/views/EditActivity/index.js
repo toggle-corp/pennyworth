@@ -10,6 +10,9 @@ import Button from '#rsca/Button';
 import AccentButton from '#rsca/Button/AccentButton';
 import DangerConfirmButton from '#rsca/ConfirmButton/DangerConfirmButton';
 
+import { encodeDate } from '#rsu/common';
+import { iconNames } from '#rsk';
+
 import { categoryListSelector } from '#redux/categories';
 import {
     activitiesSelector,
@@ -70,6 +73,11 @@ export default class EditActivity extends React.PureComponent {
             initialData = props.activities[props.activityId];
         }
 
+        if (!initialData.date) {
+            initialData.date = encodeDate(new Date());
+        }
+
+        this.initialData = initialData;
         this.state = {
             faramValues: initialData,
             faramErrors: {},
@@ -85,7 +93,7 @@ export default class EditActivity extends React.PureComponent {
         };
     }
 
-    getTitle = () => 'Enter activity details'
+    getTitle = () => 'Activity details'
 
     goBack = () => {
         if (this.props.routeState.fromApp) {
@@ -99,6 +107,7 @@ export default class EditActivity extends React.PureComponent {
         if (this.props.activityId) {
             this.props.editActivity({
                 id: this.props.activityId,
+                ...this.initialData,
                 ...values,
             });
         } else {
@@ -135,12 +144,13 @@ export default class EditActivity extends React.PureComponent {
             <Button
                 className={styles.backButton}
                 onClick={this.goBack}
-                iconName="ion-arrow-left-c"
+                iconName={iconNames.chevronLeft}
                 transparent
             />
-            <span>
+            <h1>
                 {this.getTitle()}
-            </span>
+            </h1>
+            <div className={styles.padding} />
         </div>
     )
 

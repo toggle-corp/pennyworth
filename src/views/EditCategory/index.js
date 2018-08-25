@@ -9,6 +9,8 @@ import Button from '#rsca/Button';
 import AccentButton from '#rsca/Button/AccentButton';
 import DangerConfirmButton from '#rsca/ConfirmButton/DangerConfirmButton';
 
+import { iconNames } from '#rsk';
+
 import {
     categoriesSelector,
     addCategoryAction,
@@ -81,7 +83,7 @@ export default class EditCategory extends React.PureComponent {
         };
     }
 
-    getTitle = () => 'Enter category details'
+    getTitle = () => 'Category details'
 
     goBack = () => {
         if (this.props.routeState.fromApp) {
@@ -131,12 +133,13 @@ export default class EditCategory extends React.PureComponent {
             <Button
                 className={styles.backButton}
                 onClick={this.goBack}
-                iconName="ion-arrow-left-c"
+                iconName={iconNames.chevronLeft}
                 transparent
             />
-            <span>
+            <h1>
                 {this.getTitle()}
-            </span>
+            </h1>
+            <div className={styles.padding} />
         </div>
     )
 

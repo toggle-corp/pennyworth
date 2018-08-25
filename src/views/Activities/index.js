@@ -1,10 +1,16 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { activitySortedListSelector } from '#redux/activities';
 import { categoriesSelector } from '#redux/categories';
 import styles from './styles.scss';
+
+const propTypes = {
+    categories: PropTypes.objectOf(PropTypes.object).isRequired,
+    activityList: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
 
 const mapStateToProps = state => ({
     activityList: activitySortedListSelector(state),
@@ -13,7 +19,9 @@ const mapStateToProps = state => ({
 const emptyObject = {};
 
 @connect(mapStateToProps)
-export default class Activity extends React.PureComponent {
+export default class Activities extends React.PureComponent {
+    static propTypes = propTypes;
+
     renderItem = (activity) => {
         const category = this.props.categories[activity.category] || emptyObject;
 

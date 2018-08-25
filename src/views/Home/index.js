@@ -1,10 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import Header from '#components/Header';
 import NavBar from '#components/NavBar';
 import Dashboard from '#views/Dashboard';
-import Activity from '#views/Activity';
+import Activities from '#views/Activities';
 import Categories from '#views/Categories';
 
 import {
@@ -14,14 +15,17 @@ import {
 
 import styles from './styles.scss';
 
-const Empty = () => null;
-
 const pages = [
     { key: 'dashboard', title: 'Dashboard', page: Dashboard },
-    { key: 'activity', title: 'Activity', page: Activity },
+    { key: 'activities', title: 'Activities', page: Activities },
     { key: 'categories', title: 'Categories', page: Categories },
-    { key: 'settings', title: 'Settings', page: Empty },
 ];
+
+
+const propTypes = {
+    homePage: PropTypes.string.isRequired,
+    setHomePage: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = state => ({
     homePage: homePageSelector(state),
@@ -33,6 +37,8 @@ const mapDispatchToProps = dispatch => ({
 
 @connect(mapStateToProps, mapDispatchToProps)
 export default class Home extends React.PureComponent {
+    static propTypes = propTypes;
+
     handlePageChange = (homePage) => {
         this.props.setHomePage(homePage);
     }

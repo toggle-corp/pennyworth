@@ -1,10 +1,17 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
     incomeSelector,
     expenseSelector,
 } from '#redux/combined';
 import styles from './styles.scss';
+
+
+const propTypes = {
+    income: PropTypes.number.isRequired,
+    expense: PropTypes.number.isRequired,
+};
 
 const mapStateToProps = state => ({
     income: incomeSelector(state),
@@ -13,6 +20,8 @@ const mapStateToProps = state => ({
 
 @connect(mapStateToProps)
 export default class Dashboard extends React.PureComponent {
+    static propTypes = propTypes;
+
     renderBody = () => (
         <div className={styles.body}>
             <div className={styles.summary}>

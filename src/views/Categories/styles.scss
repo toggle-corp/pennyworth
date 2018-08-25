@@ -11,7 +11,7 @@
         justify-content: space-between;
         margin: 0 16px;
         border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-        padding: 8px 0;
+        padding: 10px 0;
         text-decoration: none;
         color: inherit;
 
@@ -23,10 +23,17 @@
     }
 
     .new-item {
-        margin: 24px 16px;
-        text-transform: uppercase;
-        text-decoration: none;
-        color: $color-accent;
-        font-size: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0 16px;
+        height: 32px;
+
+        a {
+            text-transform: uppercase;
+            text-decoration: none;
+            color: $color-accent;
+            font-size: 14px;
+        }
     }
 }

@@ -6,7 +6,7 @@ import rootReducer from '../redux';
 const persistConfig = {
     key: 'pennyworth',
     storage,
-    blacklist: ['uiState'],
+    blacklist: [],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

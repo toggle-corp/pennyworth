@@ -35,15 +35,24 @@ export default class Header extends React.PureComponent {
                 <h1>
                     Pennyworth
                 </h1>
-                <Link
-                    to={{
-                        pathname: '/edit-activity/',
-                        state: { fromApp: true },
-                    }}
-                    className={styles.action}
-                >
-                    <span className={iconNames.add} />
-                </Link>
+                <div className={styles.action}>
+                    <Link
+                        to={{
+                            pathname: '/edit-activity/',
+                            state: { fromApp: true },
+                        }}
+                    >
+                        <span className={iconNames.add} />
+                    </Link>
+                    <Link
+                        to={{
+                            pathname: '/settings/',
+                            state: { fromApp: true },
+                        }}
+                    >
+                        <span className="ion-android-settings" />
+                    </Link>
+                </div>
             </div>
         );
     }

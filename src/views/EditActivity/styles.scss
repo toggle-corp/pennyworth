@@ -3,25 +3,35 @@
 .edit-activity {
     .header {
         display: flex;
-        align-items: flex-start;
-        flex-direction: column;
-        justify-content: flex-end;
+        align-items: center;
+        justify-content: space-between;
         padding: 0 16px;
-        height: 72px;
-        color: $color-primary;
-        font-size: 24px;
+        height: 56px;
 
         .back-button {
-            margin-bottom: 4px;
-            color: rgba(0, 0, 0, 0.2);
-            font-size: 28px;
+            margin: 0;
+            padding: 0;
+            color: $color-primary;
+            font-size: 16px;
+        }
+
+        h1 {
+            margin: 0;
+            text-transform: uppercase;
+            color: $color-primary;
+            font-size: 18px;
+            font-weight: 200;
+        }
+
+        .padding {
+            width: 16px;
         }
     }
 
     .form {
         display: flex;
         flex-direction: column;
-        margin: 32px 0;
+        padding: 16px 0;
 
         .form-item {
             margin: 4px 16px;
@@ -30,7 +40,11 @@
         .footer {
             display: flex;
             justify-content: flex-end;
-            margin: 32px 16px;
+            margin: 32px 16px 0;
+
+            button {
+                font-size: 14px;
+            }
         }
     }
 }

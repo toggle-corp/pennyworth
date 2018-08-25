@@ -1,13 +1,29 @@
 import { createSelector } from 'reselect';
 import update from '#rsu/immutable-update';
-import { randomString } from '#rsu/common';
+import { randomString, pick } from '#rsu/common';
 import createReducer from './create-reducer';
 
 const initialData = {
     activities: {},
 };
 
-export const activitiesSelector = ({ activities }) => activities.activities;
+export const allActivitiesSelector = ({ activities }) => activities.activities;
+export const allActivityListSelector = createSelector(
+    allActivitiesSelector,
+    activities => Object.keys(activities).map(id => ({
+        id,
+        ...activities[id],
+    })),
+);
+
+export const activitiesSelector = createSelector(
+    allActivitiesSelector,
+    activities => pick(
+        activities,
+        Object.keys(activities).filter(a => !activities[a].deleted),
+    ),
+);
+
 export const activityListSelector = createSelector(
     activitiesSelector,
     activities => Object.keys(activities).map(id => ({
@@ -35,18 +51,23 @@ export const addActivityAction = ({ title, amount, category, date }) => ({
     date,
 });
 
-export const editActivityAction = ({ id, title, amount, category, date }) => ({
+export const editActivityAction = ({
+    id, title, amount, category, date, createdAt, sync = false,
+}) => ({
     type: EDIT_ACTIVITY,
     id,
     title,
     amount: +amount,
     category,
     date,
+    createdAt,
+    sync,
 });
 
-export const removeActivityAction = ({ id }) => ({
+export const removeActivityAction = ({ id, sync = false }) => ({
     type: REMOVE_ACTIVITY,
     id,
+    sync,
 });
 
 const addActivity = (state, action) => {
@@ -60,6 +81,7 @@ const addActivity = (state, action) => {
                 category,
                 date,
                 createdAt: Date.now(),
+                sync: false,
             } },
         } },
     };
@@ -67,7 +89,7 @@ const addActivity = (state, action) => {
 };
 
 const editActivity = (state, action) => {
-    const { id, title, amount, category, date } = action;
+    const { id, title, amount, category, date, createdAt, sync } = action;
     const settings = {
         activities: { $auto: {
             [id]: { $set: {
@@ -75,6 +97,8 @@ const editActivity = (state, action) => {
                 amount,
                 category,
                 date,
+                createdAt,
+                sync,
             } },
         } },
     };
@@ -82,10 +106,22 @@ const editActivity = (state, action) => {
 };
 
 const removeActivity = (state, action) => {
-    const { id } = action;
+    const { id, sync } = action;
+    if (sync) {
+        const settings = {
+            activities: { $auto: {
+                $unset: [id],
+            } },
+        };
+        return update(state, settings);
+    }
+
     const settings = {
         activities: { $auto: {
-            $unset: [id],
+            [id]: { $merge: {
+                deleted: true,
+                sync: false,
+            } },
         } },
     };
     return update(state, settings);

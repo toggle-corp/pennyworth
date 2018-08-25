@@ -1,17 +1,24 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { categoryListSelector } from '#redux/categories';
 import styles from './styles.scss';
 
+
+const propTypes = {
+    categoryList: PropTypes.arrayOf(PropTypes.object).isRequired,
+};
+
 const mapStateToProps = state => ({
     categoryList: categoryListSelector(state),
 });
-const emptyObject = {};
 
 @connect(mapStateToProps)
 export default class Categories extends React.PureComponent {
+    static propTypes = propTypes;
+
     renderItem = category => (
         <Link
             to={{
@@ -32,18 +39,21 @@ export default class Categories extends React.PureComponent {
     render() {
         return (
             <div className={styles.categories}>
-                {this.props.categoryList.map(this.renderItem)}
-                <Link
-                    to={{
-                        pathname: '/edit-category/',
-                        state: { fromApp: true },
-                    }}
-                    className={styles.newItem}
-                >
-                    <span>
-                        Add new category
-                    </span>
-                </Link>
+                <div className={styles.newItem}>
+                    <Link
+                        to={{
+                            pathname: '/edit-category/',
+                            state: { fromApp: true },
+                        }}
+                    >
+                        <span>
+                            New category
+                        </span>
+                    </Link>
+                </div>
+                <div>
+                    {this.props.categoryList.map(this.renderItem)}
+                </div>
             </div>
         );
     }

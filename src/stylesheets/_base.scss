@@ -38,5 +38,9 @@ $color-warning: #e0b652;
             min-width: auto;
             color: $color-accent;
         }
+
+        .cancel-button.button-default {
+            color: $color-danger;
+        }
     }
 }
