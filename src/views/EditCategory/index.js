@@ -134,16 +134,32 @@ export default class EditCategory extends React.PureComponent {
 
     renderHeader = () => (
         <div className={styles.header}>
-            <Button
-                className={styles.backButton}
-                onClick={this.goBack}
-                iconName={iconNames.chevronLeft}
-                transparent
-            />
-            <h1>
-                {this.getTitle()}
-            </h1>
-            <div className={styles.padding} />
+            <div className={styles.left}>
+                <Button
+                    className={styles.backButton}
+                    onClick={this.goBack}
+                    iconName={iconNames.chevronLeft}
+                    transparent
+                />
+                <h1>
+                    {this.getTitle()}
+                </h1>
+            </div>
+            <div className={styles.right}>
+                {this.props.categoryId && (
+                    <DangerConfirmButton
+                        onClick={this.handleDelete}
+                        confirmationMessage="Are you sure you want to delete this category?"
+                        iconName={iconNames.delete}
+                        transparent
+                    />
+                )}
+                <AccentButton
+                    type="submit"
+                    iconName={iconNames.check}
+                    transparent
+                />
+            </div>
         </div>
     )
 
@@ -168,26 +184,6 @@ export default class EditCategory extends React.PureComponent {
                 label="Flow"
                 options={categoryFlowOptions}
             />
-            <div className={styles.footer}>
-                {!this.props.categoryId && (
-                    <span />
-                )}
-                {this.props.categoryId && (
-                    <DangerConfirmButton
-                        onClick={this.handleDelete}
-                        confirmationMessage="Are you sure you want to delete this category?"
-                        transparent
-                    >
-                        Delete
-                    </DangerConfirmButton>
-                )}
-                <AccentButton
-                    type="submit"
-                    transparent
-                >
-                    Save
-                </AccentButton>
-            </div>
         </Faram>
     )
 

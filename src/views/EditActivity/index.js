@@ -144,16 +144,32 @@ export default class EditActivity extends React.PureComponent {
 
     renderHeader = () => (
         <div className={styles.header}>
-            <Button
-                className={styles.backButton}
-                onClick={this.goBack}
-                iconName={iconNames.chevronLeft}
-                transparent
-            />
-            <h1>
-                {this.getTitle()}
-            </h1>
-            <div className={styles.padding} />
+            <div className={styles.left}>
+                <Button
+                    className={styles.backButton}
+                    onClick={this.goBack}
+                    iconName={iconNames.chevronLeft}
+                    transparent
+                />
+                <h1>
+                    {this.getTitle()}
+                </h1>
+            </div>
+            <div className={styles.right}>
+                {this.props.activityId && (
+                    <DangerConfirmButton
+                        onClick={this.handleDelete}
+                        confirmationMessage="Are you sure you want to delete this activity?"
+                        iconName={iconNames.delete}
+                        transparent
+                    />
+                )}
+                <AccentButton
+                    type="submit"
+                    iconName={iconNames.check}
+                    transparent
+                />
+            </div>
         </div>
     )
 
@@ -191,26 +207,6 @@ export default class EditActivity extends React.PureComponent {
                 keySelector={CategoryKeySelector}
                 labelSelector={CategoryLabelSelector}
             />
-            <div className={styles.footer}>
-                {!this.props.activityId && (
-                    <span />
-                )}
-                {this.props.activityId && (
-                    <DangerConfirmButton
-                        onClick={this.handleDelete}
-                        confirmationMessage="Are you sure you want to delete this activity?"
-                        transparent
-                    >
-                        Delete
-                    </DangerConfirmButton>
-                )}
-                <AccentButton
-                    type="submit"
-                    transparent
-                >
-                    Save
-                </AccentButton>
-            </div>
         </Faram>
     )
 

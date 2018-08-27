@@ -1,0 +1,26 @@
+@import '../../stylesheets/base';
+
+.floating-action-link {
+    display: flex;
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    align-items: center;
+    justify-content: center;
+    margin: 1px;
+    border-radius: 50%;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.16);
+    background-color: $color-accent;
+    width: 48px;
+    height: 48px;
+    text-decoration: none;
+    color: #fff;
+    font-family: $font-normal;
+    font-size: 24px;
+    user-select: none;
+
+    &:active {
+        margin: 0px;
+        box-shadow: 0 0 4px rgba(0, 0, 0, 0.16);
+    }
+}

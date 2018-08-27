@@ -8,23 +8,29 @@
         padding: 0 16px;
         height: 56px;
 
-        .back-button {
-            margin: 0;
-            padding: 0;
-            color: $color-primary;
-            font-size: 16px;
+        .left {
+            display: flex;
+
+            .back-button {
+                margin: 0;
+                padding: 0;
+                color: $color-primary;
+                font-size: 16px;
+            }
+
+            h1 {
+                margin: 0 16px;
+                text-transform: uppercase;
+                color: $color-primary;
+                font-size: 18px;
+                font-weight: 200;
+            }
         }
 
-        h1 {
-            margin: 0;
-            text-transform: uppercase;
-            color: $color-primary;
-            font-size: 18px;
-            font-weight: 200;
-        }
-
-        .padding {
-            width: 16px;
+        .right {
+            button {
+                font-size: 16px;
+            }
         }
     }
 
@@ -35,16 +41,6 @@
 
         .form-item {
             margin: 4px 16px;
-        }
-
-        .footer {
-            display: flex;
-            justify-content: flex-end;
-            margin: 32px 16px 0;
-
-            button {
-                font-size: 14px;
-            }
         }
     }
 }

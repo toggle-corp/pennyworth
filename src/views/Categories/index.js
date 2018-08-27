@@ -39,16 +39,17 @@ export default class Categories extends React.PureComponent {
     render() {
         return (
             <div className={styles.categories}>
-                <div className={styles.newItem}>
+                <div className={styles.header}>
+                    <h1>
+                        Categories
+                    </h1>
                     <Link
                         to={{
                             pathname: '/edit-category/',
                             state: { fromApp: true },
                         }}
                     >
-                        <span>
-                            New category
-                        </span>
+                        +
                     </Link>
                 </div>
                 <div>

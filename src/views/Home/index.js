@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import Header from '#components/Header';
 import NavBar from '#components/NavBar';
 import Dashboard from '#views/Dashboard';
 import Activities from '#views/Activities';
@@ -16,9 +15,24 @@ import {
 import styles from './styles.scss';
 
 const pages = [
-    { key: 'dashboard', title: 'Dashboard', page: Dashboard },
-    { key: 'activities', title: 'Activities', page: Activities },
-    { key: 'categories', title: 'Categories', page: Categories },
+    {
+        key: 'dashboard',
+        title: 'Dashboard',
+        page: Dashboard,
+        icon: 'ion-cube',
+    },
+    {
+        key: 'activities',
+        title: 'Activities',
+        page: Activities,
+        icon: 'ion-android-list',
+    },
+    {
+        key: 'categories',
+        title: 'Categories',
+        page: Categories,
+        icon: 'ion-android-folder',
+    },
 ];
 
 
@@ -50,7 +64,6 @@ export default class Home extends React.PureComponent {
 
         return (
             <div className={styles.home}>
-                <Header className={styles.header} />
                 <div className={styles.body}>
                     <CurrentPage />
                 </div>

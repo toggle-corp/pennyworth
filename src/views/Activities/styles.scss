@@ -3,7 +3,27 @@
 .activity {
     display: flex;
     flex-direction: column;
-    margin-top: 8px;
+    flex-grow: 1;
+
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 16px;
+        height: 56px;
+
+        h1 {
+            font-size: 24px;
+            font-weight: 200;
+        }
+
+        a {
+            padding: 0 8px;
+            text-decoration: none;
+            color: $color-accent;
+            font-size: 24px;
+        }
+    }
 
     .item {
         display: flex;

@@ -55,7 +55,22 @@ export default class Activities extends React.PureComponent {
     render() {
         return (
             <div className={styles.activity}>
-                {this.props.activityList.map(this.renderItem)}
+                <div className={styles.header}>
+                    <h1>
+                        Activities
+                    </h1>
+                    <Link
+                        to={{
+                            pathname: '/edit-activity/',
+                            state: { fromApp: true },
+                        }}
+                    >
+                        +
+                    </Link>
+                </div>
+                <div>
+                    {this.props.activityList.map(this.renderItem)}
+                </div>
             </div>
         );
     }
