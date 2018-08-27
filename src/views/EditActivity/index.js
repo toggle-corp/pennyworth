@@ -174,15 +174,7 @@ export default class EditActivity extends React.PureComponent {
     )
 
     renderForm = () => (
-        <Faram
-            className={styles.form}
-            onValidationSuccess={this.handleFaramSuccess}
-            onValidationFailure={this.handleValidationFailure}
-            onChange={this.handleFaramChange}
-            schema={this.schema}
-            value={this.state.faramValues}
-            error={this.state.faramErrors}
-        >
+        <div className={styles.form}>
             <TextInput
                 className={styles.formItem}
                 faramElementName="title"
@@ -207,7 +199,7 @@ export default class EditActivity extends React.PureComponent {
                 keySelector={CategoryKeySelector}
                 labelSelector={CategoryLabelSelector}
             />
-        </Faram>
+        </div>
     )
 
     render() {
@@ -215,10 +207,18 @@ export default class EditActivity extends React.PureComponent {
         const Form = this.renderForm;
 
         return (
-            <div className={styles.editActivity}>
+            <Faram
+                className={styles.editActivity}
+                onValidationSuccess={this.handleFaramSuccess}
+                onValidationFailure={this.handleValidationFailure}
+                onChange={this.handleFaramChange}
+                schema={this.schema}
+                value={this.state.faramValues}
+                error={this.state.faramErrors}
+            >
                 <Header />
                 <Form />
-            </div>
+            </Faram>
         );
     }
 }

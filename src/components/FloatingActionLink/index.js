@@ -5,8 +5,6 @@ import { Link } from 'react-router-dom';
 import styles from './styles.scss';
 
 
-const noOp = () => undefined;
-
 const propTypes = {
     className: PropTypes.string,
     content: PropTypes.oneOfType([

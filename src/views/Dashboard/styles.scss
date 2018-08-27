@@ -5,37 +5,102 @@
     flex-grow: 1;
     overflow-y: auto;
 
-    .header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 0 16px;
-        height: 56px;
-
-        h1 {
-            font-size: 24px;
-            font-weight: 200;
-        }
-    }
-
     .body {
         display: flex;
         flex-direction: column;
         padding: 16px;
 
-        .summary {
+        .rings {
             display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-            margin-bottom: 18px;
+            align-items: center;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: center;
 
-            span:first-child {
-                font-size: 18px;
+            svg {
+                path {
+                    stroke-width: 8px;
+                    fill: transparent;
+
+                    &.income-ring {
+                        stroke: $color-success;
+                    }
+
+                    &.expense-ring {
+                        stroke: $color-danger;
+                    }
+                }
             }
 
-            span:last-child {
-                font-family: $font-monospace;
-                font-size: 32px;
+            .summary {
+                display: flex;
+                flex-direction: column;
+                width: 160px;
+
+                .income,
+                .expense {
+                    display: flex;
+                    align-items: center;
+                    flex-grow: 1;
+                    justify-content: space-between;
+
+                    .amount {
+                        font-family: $font-family-monospace;
+                        font-size: 20px;
+                    }
+                }
+
+                .income {
+                    color: $color-success;
+                }
+
+                .expense {
+                    color: $color-danger;
+                }
+            }
+        }
+
+        .planned-vs-actual {
+            margin-top: 48px;
+
+            .planned,
+            .actual {
+                margin-bottom: 6px;
+
+                .bar {
+                    height: 10px;
+                }
+
+                .summary {
+                    display: flex;
+                    align-items: center;
+                    width: 100%;
+                    color: rgba(0, 0, 0, 0.7);
+                    font-size: 16px;
+
+                    .label {
+                        &::after {
+                            content: ':';
+                        }
+                    }
+
+                    .amount {
+                        margin-left: 4px;
+                        font-family: $font-family-monospace;
+                    }
+                }
+            }
+
+            .planned {
+                .bar {
+                    background-color: $color-success;
+                }
+            }
+
+            .actual {
+                .bar {
+                    background-color: $color-danger;
+                }
             }
         }
     }

@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import styles from './styles.scss';
 
 
-const noOp = () => undefined;
-
 const propTypes = {
     className: PropTypes.string,
     content: PropTypes.oneOfType([

@@ -164,15 +164,7 @@ export default class EditCategory extends React.PureComponent {
     )
 
     renderForm = () => (
-        <Faram
-            className={styles.form}
-            onValidationSuccess={this.handleFaramSuccess}
-            onValidationFailure={this.handleValidationFailure}
-            onChange={this.handleFaramChange}
-            schema={this.schema}
-            value={this.state.faramValues}
-            error={this.state.faramErrors}
-        >
+        <div className={styles.form}>
             <TextInput
                 className={styles.formItem}
                 faramElementName="title"
@@ -184,7 +176,7 @@ export default class EditCategory extends React.PureComponent {
                 label="Flow"
                 options={categoryFlowOptions}
             />
-        </Faram>
+        </div>
     )
 
     render() {
@@ -192,10 +184,18 @@ export default class EditCategory extends React.PureComponent {
         const Form = this.renderForm;
 
         return (
-            <div className={styles.editCategory}>
+            <Faram
+                className={styles.editCategory}
+                onValidationSuccess={this.handleFaramSuccess}
+                onValidationFailure={this.handleValidationFailure}
+                onChange={this.handleFaramChange}
+                schema={this.schema}
+                value={this.state.faramValues}
+                error={this.state.faramErrors}
+            >
                 <Header />
                 <Form />
-            </div>
+            </Faram>
         );
     }
 }

@@ -52,7 +52,7 @@ export default class NavBar extends React.PureComponent {
             key={page.key}
             onClick={() => this.props.onChange(page.key)}
         >
-            <span className={page.icon} />
+            <span className={`${styles.icon} ${page.icon}`} />
             <span>
                 {page.title}
             </span>

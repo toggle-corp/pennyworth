@@ -42,6 +42,7 @@
                     "#views": "./src/views",
                     "#config": "./src/config",
                     "#redux": "./src/redux",
+                    "#utils": "./src/utils",
                 }
             }
         ]

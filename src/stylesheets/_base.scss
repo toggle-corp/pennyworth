@@ -1,10 +1,10 @@
-$font-normal: 'Source Sans Pro', sans-serif;
-$font-monospace: 'Inconsolata', monospace;
+$font-family-normal: 'Source Sans Pro', sans-serif;
+$font-family-monospace: 'Inconsolata', monospace;
 
 $color-primary: #000000;
 $color-accent: #e74c3c;
 $color-info: #e74c3c;
-$color-success: #e74c3c;
+$color-success: #3498db;
 $color-danger: #f39c12;
 $color-warning: #e0b652;
 
@@ -12,5 +12,6 @@ $color-warning: #e0b652;
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: $font-normal;
+    font-family: $font-family-normal;
+    user-select: none;
 }

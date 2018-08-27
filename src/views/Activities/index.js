@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+import { iconNames } from '#rsk';
 import { activitySortedListSelector } from '#redux/activities';
 import { categoriesSelector } from '#redux/categories';
 import styles from './styles.scss';
@@ -38,7 +39,7 @@ export default class Activities extends React.PureComponent {
                     <div className={styles.title}>
                         {activity.title}
                     </div>
-                    <div className={styles.category}>
+                    <div className={`${styles.category} ${styles[category.flow]}`}>
                         {category.title}
                     </div>
                     <div className={styles.date}>
@@ -65,7 +66,7 @@ export default class Activities extends React.PureComponent {
                             state: { fromApp: true },
                         }}
                     >
-                        +
+                        <span className={iconNames.add} />
                     </Link>
                 </div>
                 <div>

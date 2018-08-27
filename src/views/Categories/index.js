@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
+import { iconNames } from '#rsk';
 import { categoryListSelector } from '#redux/categories';
 import styles from './styles.scss';
 
@@ -49,7 +50,7 @@ export default class Categories extends React.PureComponent {
                             state: { fromApp: true },
                         }}
                     >
-                        +
+                        <span className={iconNames.add} />
                     </Link>
                 </div>
                 <div>

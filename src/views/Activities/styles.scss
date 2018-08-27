@@ -21,7 +21,7 @@
             padding: 0 8px;
             text-decoration: none;
             color: $color-accent;
-            font-size: 24px;
+            font-size: 16px;
         }
     }
 
@@ -41,8 +41,15 @@
             }
 
             .category {
-                color: $color-accent;
                 font-size: 14px;
+
+                &.in {
+                    color: $color-success;
+                }
+
+                &.out {
+                    color: $color-danger;
+                }
             }
 
             .date {
