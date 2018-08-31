@@ -10,9 +10,9 @@ const initialData = {
 export const allActivitiesSelector = ({ activities }) => activities.activities;
 export const allActivityListSelector = createSelector(
     allActivitiesSelector,
-    activities => Object.keys(activities).map(id => ({
-        id,
-        ...activities[id],
+    activities => Object.keys(activities).map(key => ({
+        key,
+        ...activities[key],
     })),
 );
 
@@ -26,9 +26,9 @@ export const activitiesSelector = createSelector(
 
 export const activityListSelector = createSelector(
     activitiesSelector,
-    activities => Object.keys(activities).map(id => ({
-        id,
-        ...activities[id],
+    activities => Object.keys(activities).map(key => ({
+        key,
+        ...activities[key],
     })),
 );
 export const activitySortedListSelector = createSelector(
@@ -52,27 +52,28 @@ export const addActivityAction = ({ title, amount, category, date }) => ({
 });
 
 export const editActivityAction = ({
-    id, title, amount, category, date, createdAt, sync = false,
+    key, title, amount, category, date, createdAt, modifiedAt, sync = false,
 }) => ({
     type: EDIT_ACTIVITY,
-    id,
+    key,
     title,
     amount: +amount,
     category,
     date,
     createdAt,
+    modifiedAt,
     sync,
 });
 
-export const removeActivityAction = ({ id, sync = false }) => ({
+export const removeActivityAction = ({ key, sync = false }) => ({
     type: REMOVE_ACTIVITY,
-    id,
+    key,
     sync,
 });
 
 const addActivity = (state, action) => {
     const { title, amount, category, date } = action;
-    const newId = randomString();
+    const newId = randomString(16);
     const settings = {
         activities: { $auto: {
             [newId]: { $set: {
@@ -89,15 +90,16 @@ const addActivity = (state, action) => {
 };
 
 const editActivity = (state, action) => {
-    const { id, title, amount, category, date, createdAt, sync } = action;
+    const { key, title, amount, category, date, createdAt, modifiedAt, sync } = action;
     const settings = {
         activities: { $auto: {
-            [id]: { $set: {
+            [key]: { $set: {
                 title,
                 amount,
                 category,
                 date,
                 createdAt,
+                modifiedAt,
                 sync,
             } },
         } },
@@ -106,21 +108,12 @@ const editActivity = (state, action) => {
 };
 
 const removeActivity = (state, action) => {
-    const { id, sync } = action;
-    if (sync) {
-        const settings = {
-            activities: { $auto: {
-                $unset: [id],
-            } },
-        };
-        return update(state, settings);
-    }
-
+    const { key, sync } = action;
     const settings = {
         activities: { $auto: {
-            [id]: { $merge: {
+            [key]: { $merge: {
                 deleted: true,
-                sync: false,
+                sync,
             } },
         } },
     };

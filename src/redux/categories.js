@@ -4,22 +4,15 @@ import { randomString, pick } from '#rsu/common';
 import createReducer from './create-reducer';
 
 const initialData = {
-    categories: {
-        1: { title: 'Income', flow: 'in' },
-        2: { title: 'Rent', flow: 'out' },
-        3: { title: 'Food', flow: 'out' },
-        4: { title: 'Travel', flow: 'out' },
-        5: { title: 'Shopping', flow: 'out' },
-        6: { title: 'Other Expense', flow: 'out' },
-    },
+    categories: {},
 };
 
 export const allCategoriesSelector = ({ categories }) => categories.categories;
 export const allCategoryListSelector = createSelector(
     allCategoriesSelector,
-    categories => Object.keys(categories).map(id => ({
-        id,
-        ...categories[id],
+    categories => Object.keys(categories).map(key => ({
+        key,
+        ...categories[key],
     })),
 );
 
@@ -33,9 +26,9 @@ export const categoriesSelector = createSelector(
 
 export const categoryListSelector = createSelector(
     categoriesSelector,
-    categories => Object.keys(categories).map(id => ({
-        id,
-        ...categories[id],
+    categories => Object.keys(categories).map(key => ({
+        key,
+        ...categories[key],
     })),
 );
 
@@ -44,34 +37,38 @@ const ADD_CATEGORY = 'categories/ADD_CATEGORY';
 const EDIT_CATEGORY = 'categories/EDIT_CATEGORY';
 const REMOVE_CATEGORY = 'categories/REMOVE_CATEGORY';
 
-export const addCategoryAction = ({ title, flow }) => ({
+export const addCategoryAction = ({ title, activityType }) => ({
     type: ADD_CATEGORY,
     title,
-    flow,
+    activityType,
 });
 
-export const editCategoryAction = ({ id, title, flow, sync = false }) => ({
+export const editCategoryAction = ({
+    key, title, activityType, createdAt, modifiedAt, sync = false,
+}) => ({
     type: EDIT_CATEGORY,
-    id,
+    key,
     title,
-    flow,
+    activityType,
+    createdAt,
+    modifiedAt,
     sync,
 });
 
-export const removeCategoryAction = ({ id, sync = false }) => ({
+export const removeCategoryAction = ({ key, sync = false }) => ({
     type: REMOVE_CATEGORY,
-    id,
+    key,
     sync,
 });
 
 const addCategory = (state, action) => {
-    const { title, flow } = action;
-    const newId = randomString();
+    const { title, activityType } = action;
+    const newId = randomString(16);
     const settings = {
         categories: { $auto: {
             [newId]: { $set: {
                 title,
-                flow,
+                activityType,
                 sync: false,
             } },
         } },
@@ -80,12 +77,14 @@ const addCategory = (state, action) => {
 };
 
 const editCategory = (state, action) => {
-    const { id, title, flow, sync } = action;
+    const { key, title, activityType, createdAt, modifiedAt, sync } = action;
     const settings = {
         categories: { $auto: {
-            [id]: { $set: {
+            [key]: { $set: {
                 title,
-                flow,
+                activityType,
+                createdAt,
+                modifiedAt,
                 sync,
             } },
         } },
@@ -94,21 +93,12 @@ const editCategory = (state, action) => {
 };
 
 const removeCategory = (state, action) => {
-    const { id, sync } = action;
-    if (sync) {
-        const settings = {
-            categories: { $auto: {
-                $unset: [id],
-            } },
-        };
-        return update(state, settings);
-    }
-
+    const { key, sync } = action;
     const settings = {
         categories: { $auto: {
-            [id]: { $merge: {
+            [key]: { $merge: {
                 deleted: true,
-                sync: false,
+                sync,
             } },
         } },
     };

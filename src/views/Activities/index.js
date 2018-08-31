@@ -29,17 +29,17 @@ export default class Activities extends React.PureComponent {
         return (
             <Link
                 to={{
-                    pathname: `/edit-activity/${activity.id}/`,
+                    pathname: `/edit-activity/${activity.key}/`,
                     state: { fromApp: true },
                 }}
-                key={activity.id}
+                key={activity.key}
                 className={styles.item}
             >
                 <div className={styles.summary}>
                     <div className={styles.title}>
                         {activity.title}
                     </div>
-                    <div className={`${styles.category} ${styles[category.flow]}`}>
+                    <div className={styles.category}>
                         {category.title}
                     </div>
                     <div className={styles.date}>

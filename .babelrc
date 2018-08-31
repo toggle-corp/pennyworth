@@ -43,6 +43,7 @@
                     "#config": "./src/config",
                     "#redux": "./src/redux",
                     "#utils": "./src/utils",
+                    '#rest': "./src/rest",
                 }
             }
         ]

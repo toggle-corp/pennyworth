@@ -42,14 +42,6 @@
 
             .category {
                 font-size: 14px;
-
-                &.in {
-                    color: $color-success;
-                }
-
-                &.out {
-                    color: $color-danger;
-                }
             }
 
             .date {

@@ -5,12 +5,10 @@ import { PersistGate } from 'redux-persist/integration/react';
 
 import App from '#views/App';
 import configureStore from '#config/store';
-import configureFirebase from '#config/firebase';
 import registerServiceWorker from './registerServiceWorker';
 
 
 const { store, persistor } = configureStore();
-configureFirebase();
 
 const Root = () => (
     <Provider store={store}>

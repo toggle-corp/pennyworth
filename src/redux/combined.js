@@ -9,7 +9,7 @@ export const incomeSelector = createSelector(
     (categories, activityList) => activityList.reduce(
         (acc, a) => {
             const category = categories[a.category];
-            if (category && category.flow === 'in') {
+            if (category && category.activityType === 'income') {
                 return acc + a.amount;
             }
             return acc;
@@ -24,7 +24,7 @@ export const expenseSelector = createSelector(
     (categories, activityList) => activityList.reduce(
         (acc, a) => {
             const category = categories[a.category];
-            if (category && category.flow === 'out') {
+            if (category && category.activityType === 'expense') {
                 return acc + a.amount;
             }
             return acc;

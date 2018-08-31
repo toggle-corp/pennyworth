@@ -23,10 +23,10 @@ export default class Categories extends React.PureComponent {
     renderItem = category => (
         <Link
             to={{
-                pathname: `/edit-category/${category.id}/`,
+                pathname: `/edit-category/${category.key}/`,
                 state: { fromApp: true },
             }}
-            key={category.id}
+            key={category.key}
             className={styles.item}
         >
             <div className={styles.summary}>

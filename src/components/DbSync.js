@@ -1,177 +1,220 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import firebase from 'firebase/app';
 import { connect } from 'react-redux';
 
-import { userSelector } from '#redux/auth';
+import { api, decodeAccessToken } from '#rest';
+import Request, { ApiPropType } from '#components/Request';
+import {
+    tokensSelector,
+    logoutAction,
+    setUserAction,
+    setTokensAction,
+} from '#redux/auth';
 import {
     allCategoryListSelector,
     editCategoryAction,
-    removeCategoryAction,
 } from '#redux/categories';
-
 import {
     allActivityListSelector,
     editActivityAction,
-    removeActivityAction,
 } from '#redux/activities';
 
 const propTypes = {
-    user: PropTypes.shape({ uid: PropTypes.string }).isRequired,
     children: PropTypes.node.isRequired,
+    api: ApiPropType.isRequired,
 
-    categoryList: PropTypes.arrayOf(PropTypes.object),
+    tokens: PropTypes.shape({
+        access: PropTypes.string,
+        refresh: PropTypes.string,
+    }),
+    logout: PropTypes.func.isRequired,
+    setUser: PropTypes.func.isRequired,
+    setTokens: PropTypes.func.isRequired,
+
+    categoryList: PropTypes.arrayOf(PropTypes.object).isRequired,
     editCategory: PropTypes.func.isRequired,
-    removeCategory: PropTypes.func.isRequired,
 
-    activityList: PropTypes.arrayOf(PropTypes.object),
+    activityList: PropTypes.arrayOf(PropTypes.object).isRequired,
     editActivity: PropTypes.func.isRequired,
-    removeActivity: PropTypes.func.isRequired,
 };
 
 const defaultProps = {
-    categoryList: [],
-    activityList: [],
+    tokens: {},
 };
 
 const mapStateToProps = state => ({
+    tokens: tokensSelector(state),
     categoryList: allCategoryListSelector(state),
     activityList: allActivityListSelector(state),
-    user: userSelector(state),
 });
 
 const mapDispatchToProps = dispatch => ({
+    logout: () => dispatch(logoutAction()),
+    setUser: params => dispatch(setUserAction(params)),
+    setTokens: params => dispatch(setTokensAction(params)),
+
     editCategory: params => dispatch(editCategoryAction(params)),
-    removeCategory: params => dispatch(removeCategoryAction(params)),
     editActivity: params => dispatch(editActivityAction(params)),
-    removeActivity: params => dispatch(removeActivityAction(params)),
 });
 
 
-const removeKeys = (obj, keys) => {
-    const newObj = { ...obj };
-    keys.forEach(key => delete newObj[key]);
-    return newObj;
-};
-
+@Request
 @connect(mapStateToProps, mapDispatchToProps)
 export default class DbSync extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
-    constructor(props) {
-        super(props);
-        this.db = firebase.database();
-    }
-
     componentDidMount() {
-        this.createListeners();
-        this.writeUnsaved({
-            user: this.props.user,
-            categoryList: this.props.categoryList,
-            activityList: this.props.activityList,
-        });
+        this.refreshToken();
+        this.fetchCategories();
+        this.fetchActivities();
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.categoryList !== this.props.categoryList ||
-            nextProps.activityList !== this.props.activityList
-        ) {
-            this.writeUnsaved({
-                user: nextProps.user,
-                categoryList: nextProps.categoryList,
-                activityList: nextProps.activityList,
-            });
+        if (nextProps.tokens.access !== this.props.tokens.access) {
+            this.syncAuth(nextProps.tokens.access);
+
+            if (nextProps.tokens.access) {
+                this.fetchCategories();
+                this.fetchActivities();
+                this.syncCategories(nextProps.categoryList);
+                this.syncActivities(nextProps.activityList);
+            }
+        } else if (nextProps.categoryList !== this.props.categoryList) {
+            this.syncCategories(nextProps.categoryList);
+        } else if (nextProps.activityList !== this.props.activityList) {
+            this.syncActivities(nextProps.activityList);
         }
     }
 
-    createListeners = () => {
-        const {
-            user,
-            editCategory,
-            removeCategory,
-            editActivity,
-            removeActivity,
-        } = this.props;
+    componentWillUnmount() {
+        if (this.tokenTimeout) {
+            clearTimeout(this.tokenTimeout);
+        }
+    }
 
-        const path = `user-data/${user.uid}`;
+    syncAuth = (access) => {
+        // 1. If no token, logout
+        if (!access) {
+            this.props.logout();
+            return;
+        }
 
-        const categoriesPath = `${path}/categories`;
-        const categoriesRef = this.db.ref(categoriesPath);
+        // 2. If access token, refresh user with that token
+        const tokenInfo = decodeAccessToken(access);
+        if (!tokenInfo.userId) {
+            this.props.logout();
+            return;
+        }
 
-        categoriesRef.on('child_added', (data) => {
-            editCategory({
-                ...data.val(),
-                sync: true,
-            });
+        this.props.api.get({
+            key: 'user',
+            url: api(`users/${tokenInfo.userId}`),
+            onSuccess: this.handleUserInfo,
         });
-        categoriesRef.on('child_changed', (data) => {
-            editCategory({
-                ...data.val(),
-                sync: true,
-            });
-        });
-        categoriesRef.on('child_removed', (data) => {
-            removeCategory({
-                id: data.key,
-                sync: true,
-            });
-        });
+    }
 
-        const activitiesPath = `${path}/activities`;
-        const activitiesRef = this.db.ref(activitiesPath);
+    refreshToken = () => {
+        const { refresh } = this.props.tokens;
+        if (!refresh) {
+            return;
+        }
 
-        activitiesRef.on('child_added', (data) => {
-            editActivity({
-                ...data.val(),
-                sync: true,
-            });
+        this.props.api.post({
+            key: 'refresh',
+            url: api('token/refresh'),
+            body: { refresh },
+            onSuccess: this.handleTokenRefresh,
         });
-        activitiesRef.on('child_changed', (data) => {
-            editActivity({
-                ...data.val(),
-                sync: true,
-            });
-        });
-        activitiesRef.on('child_removed', (data) => {
-            removeActivity({
-                id: data.key,
-                sync: true,
+        this.tokenTimeout = setTimeout(this.refreshToken, 1000 * 60);
+    }
+
+    handleUserInfo = (user) => {
+        this.props.setUser(user);
+    }
+
+    handleTokenRefresh = (tokens) => {
+        this.props.setTokens(tokens);
+    }
+
+    syncCategories = (categoryList) => {
+        const { editCategory } = this.props;
+
+        const categoriesToPut = categoryList.filter(c => !c.sync);
+        categoriesToPut.forEach((category) => {
+            this.props.api.post({
+                key: `categories-${category.key}`,
+                url: api('categories'),
+                body: category,
+                onSuccess: (response) => {
+                    editCategory({
+                        ...response,
+                        sync: true,
+                    });
+                },
             });
         });
     }
 
-    writeUnsaved = ({ user, categoryList, activityList }) => {
-        const path = `user-data/${user.uid}`;
-        const localKeys = [
-            'sync',
-            'deleted',
-        ];
-
-        const categoriesPath = `${path}/categories`;
-        categoryList.filter(c => !c.sync).forEach((category) => {
-            const ref = this.db.ref(`${categoriesPath}/${category.id}`);
-
-            if (category.deleted) {
-                ref.remove();
-                return;
-            }
-
-            const remoteCategory = removeKeys(category, localKeys);
-            ref.set(remoteCategory);
+    fetchCategories = () => {
+        const { editCategory, categoryList } = this.props;
+        const lastModified = Math.max(
+            0,
+            ...categoryList.map(c => c.modifiedAt),
+        );
+        this.props.api.get({
+            key: 'newCategories',
+            url: api('categories'),
+            params: { modifiedSince: lastModified },
+            onSuccess: (response) => {
+                response.results.forEach((category) => {
+                    editCategory({
+                        ...category,
+                        sync: true,
+                    });
+                });
+            },
         });
+    }
 
-        const activitiesPath = `${path}/activities`;
-        activityList.filter(a => !a.sync).forEach((activity) => {
-            const ref = this.db.ref(`${activitiesPath}/${activity.id}`);
+    syncActivities = (activityList) => {
+        const { editActivity } = this.props;
 
-            if (activity.deleted) {
-                ref.remove();
-                return;
-            }
+        const activitiesToPut = activityList.filter(c => !c.sync);
+        activitiesToPut.forEach((activity) => {
+            this.props.api.post({
+                key: `activities-${activity.key}`,
+                url: api('activities'),
+                body: activity,
+                onSuccess: (response) => {
+                    editActivity({
+                        ...response,
+                        sync: true,
+                    });
+                },
+            });
+        });
+    }
 
-            const remoteActivity = removeKeys(activity, localKeys);
-            ref.set(remoteActivity);
+    fetchActivities = () => {
+        const { editActivity, activityList } = this.props;
+
+        const lastModified = Math.max(
+            0,
+            ...activityList.map(c => c.modifiedAt),
+        );
+        this.props.api.get({
+            key: 'newActivities',
+            url: api('activities'),
+            params: { modifiedSince: lastModified },
+            onSuccess: (response) => {
+                response.results.forEach((activity) => {
+                    editActivity({
+                        ...activity,
+                        sync: true,
+                    });
+                });
+            },
         });
     }
 

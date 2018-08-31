@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import Faram, { requiredCondition } from '#rsci/Faram';
+import Faram, { requiredCondition } from '#rscg/Faram';
 import TextInput from '#rsci/TextInput';
 import SelectInput from '#rsci/SelectInput';
 import DateInput from '#rsci/DateInput';
@@ -27,7 +27,7 @@ import styles from './styles.scss';
 const DangerConfirmButton = ConfirmOnClick(DangerButton);
 
 const propTypes = {
-    activityId: PropTypes.string,
+    activityKey: PropTypes.string,
     activities: PropTypes.objectOf(PropTypes.object),
     categories: PropTypes.arrayOf(PropTypes.object),
     history: PropTypes.shape({
@@ -41,14 +41,14 @@ const propTypes = {
 };
 
 const defaultProps = {
-    activityId: undefined,
+    activityKey: undefined,
     activities: {},
     categories: [],
     routeState: {},
 };
 
 const mapStateToProps = (state, props) => ({
-    activityId: props.match.params.id,
+    activityKey: props.match.params.key,
     routeState: props.location.state,
     categories: categoryListSelector(state),
     activities: activitiesSelector(state),
@@ -60,7 +60,7 @@ const mapDispatchToProps = dispatch => ({
     deleteActivity: params => dispatch(removeActivityAction(params)),
 });
 
-const CategoryKeySelector = c => (c || {}).id;
+const CategoryKeySelector = c => (c || {}).key;
 const CategoryLabelSelector = c => (c || {}).title;
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -72,8 +72,8 @@ export default class EditActivity extends React.PureComponent {
         super(props);
 
         let initialData = {};
-        if (props.activityId) {
-            initialData = props.activities[props.activityId];
+        if (props.activityKey) {
+            initialData = props.activities[props.activityKey];
         }
 
         if (!initialData.date) {
@@ -107,9 +107,9 @@ export default class EditActivity extends React.PureComponent {
     }
 
     handleFaramSuccess = (values) => {
-        if (this.props.activityId) {
+        if (this.props.activityKey) {
             this.props.editActivity({
-                id: this.props.activityId,
+                key: this.props.activityKey,
                 ...this.initialData,
                 ...values,
             });
@@ -132,12 +132,12 @@ export default class EditActivity extends React.PureComponent {
     }
 
     handleDelete = () => {
-        if (!this.props.activityId) {
+        if (!this.props.activityKey) {
             return;
         }
 
         this.props.deleteActivity({
-            id: this.props.activityId,
+            key: this.props.activityKey,
         });
         this.goBack();
     }
@@ -156,7 +156,7 @@ export default class EditActivity extends React.PureComponent {
                 </h1>
             </div>
             <div className={styles.right}>
-                {this.props.activityId && (
+                {this.props.activityKey && (
                     <DangerConfirmButton
                         onClick={this.handleDelete}
                         confirmationMessage="Are you sure you want to delete this activity?"

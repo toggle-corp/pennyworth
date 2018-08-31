@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
-import Faram, { requiredCondition } from '#rsci/Faram';
+import Faram, { requiredCondition } from '#rscg/Faram';
 import TextInput from '#rsci/TextInput';
 import SelectInput from '#rsci/SelectInput';
 import Button from '#rsca/Button';
@@ -25,7 +25,7 @@ import styles from './styles.scss';
 const DangerConfirmButton = ConfirmOnClick(DangerButton);
 
 const propTypes = {
-    categoryId: PropTypes.string,
+    categoryKey: PropTypes.string,
     categories: PropTypes.objectOf(PropTypes.object),
     history: PropTypes.shape({
         goBack: PropTypes.func,
@@ -38,13 +38,13 @@ const propTypes = {
 };
 
 const defaultProps = {
-    categoryId: undefined,
+    categoryKey: undefined,
     categories: {},
     routeState: {},
 };
 
 const mapStateToProps = (state, props) => ({
-    categoryId: props.match.params.id,
+    categoryKey: props.match.params.key,
     routeState: props.location.state,
     categories: categoriesSelector(state),
 });
@@ -56,9 +56,9 @@ const mapDispatchToProps = dispatch => ({
 });
 
 
-const categoryFlowOptions = [
-    { key: 'in', label: 'In' },
-    { key: 'out', label: 'Out' },
+const categoryTypeOptions = [
+    { key: 'income', label: 'Income' },
+    { key: 'expense', label: 'Expense' },
 ];
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -70,8 +70,8 @@ export default class EditCategory extends React.PureComponent {
         super(props);
 
         let initialData = {};
-        if (props.categoryId) {
-            initialData = props.categories[props.categoryId];
+        if (props.categoryKey) {
+            initialData = props.categories[props.categoryKey];
         }
 
         this.state = {
@@ -82,7 +82,7 @@ export default class EditCategory extends React.PureComponent {
         this.schema = {
             fields: {
                 title: [requiredCondition],
-                flow: [requiredCondition],
+                activityType: [requiredCondition],
             },
         };
     }
@@ -98,9 +98,9 @@ export default class EditCategory extends React.PureComponent {
     }
 
     handleFaramSuccess = (values) => {
-        if (this.props.categoryId) {
+        if (this.props.categoryKey) {
             this.props.editCategory({
-                id: this.props.categoryId,
+                key: this.props.categoryKey,
                 ...values,
             });
         } else {
@@ -122,12 +122,12 @@ export default class EditCategory extends React.PureComponent {
     }
 
     handleDelete = () => {
-        if (!this.props.categoryId) {
+        if (!this.props.categoryKey) {
             return;
         }
 
         this.props.deleteCategory({
-            id: this.props.categoryId,
+            key: this.props.categoryKey,
         });
         this.goBack();
     }
@@ -146,7 +146,7 @@ export default class EditCategory extends React.PureComponent {
                 </h1>
             </div>
             <div className={styles.right}>
-                {this.props.categoryId && (
+                {this.props.categoryKey && (
                     <DangerConfirmButton
                         onClick={this.handleDelete}
                         confirmationMessage="Are you sure you want to delete this category?"
@@ -172,9 +172,9 @@ export default class EditCategory extends React.PureComponent {
             />
             <SelectInput
                 className={styles.formItem}
-                faramElementName="flow"
-                label="Flow"
-                options={categoryFlowOptions}
+                faramElementName="activityType"
+                label="Type"
+                options={categoryTypeOptions}
             />
         </div>
     )
