@@ -37,19 +37,22 @@ const ADD_CATEGORY = 'categories/ADD_CATEGORY';
 const EDIT_CATEGORY = 'categories/EDIT_CATEGORY';
 const REMOVE_CATEGORY = 'categories/REMOVE_CATEGORY';
 
-export const addCategoryAction = ({ title, activityType }) => ({
+export const addCategoryAction = ({ title, activityType, plannedAmount }) => ({
     type: ADD_CATEGORY,
     title,
     activityType,
+    plannedAmount,
 });
 
 export const editCategoryAction = ({
-    key, title, activityType, createdAt, modifiedAt, sync = false,
+    key, title, activityType, plannedAmount,
+    createdAt, modifiedAt, sync = false,
 }) => ({
     type: EDIT_CATEGORY,
     key,
     title,
     activityType,
+    plannedAmount,
     createdAt,
     modifiedAt,
     sync,
@@ -62,13 +65,14 @@ export const removeCategoryAction = ({ key, sync = false }) => ({
 });
 
 const addCategory = (state, action) => {
-    const { title, activityType } = action;
+    const { title, activityType, plannedAmount } = action;
     const newId = randomString(16);
     const settings = {
         categories: { $auto: {
             [newId]: { $set: {
                 title,
                 activityType,
+                plannedAmount,
                 sync: false,
             } },
         } },
@@ -77,12 +81,13 @@ const addCategory = (state, action) => {
 };
 
 const editCategory = (state, action) => {
-    const { key, title, activityType, createdAt, modifiedAt, sync } = action;
+    const { key, title, activityType, plannedAmount, createdAt, modifiedAt, sync } = action;
     const settings = {
         categories: { $auto: {
             [key]: { $set: {
                 title,
                 activityType,
+                plannedAmount,
                 createdAt,
                 modifiedAt,
                 sync,

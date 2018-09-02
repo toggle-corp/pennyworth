@@ -34,7 +34,7 @@ export const activityListSelector = createSelector(
 export const activitySortedListSelector = createSelector(
     activityListSelector,
     activityList => activityList.sort((a, b) => (
-        b.createdAt - a.createdAt
+        new Date(b.createdAt) - new Date(a.createdAt)
     )),
 );
 
@@ -81,7 +81,6 @@ const addActivity = (state, action) => {
                 amount,
                 category,
                 date,
-                createdAt: Date.now(),
                 sync: false,
             } },
         } },

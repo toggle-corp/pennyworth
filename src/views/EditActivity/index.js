@@ -112,6 +112,7 @@ export default class EditActivity extends React.PureComponent {
                 key: this.props.activityKey,
                 ...this.initialData,
                 ...values,
+                sync: false,
             });
         } else {
             this.props.addActivity(values);

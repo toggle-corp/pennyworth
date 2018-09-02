@@ -10,43 +10,42 @@
         flex-direction: column;
         padding: 16px;
 
-        .rings {
+        .summary {
             display: flex;
             align-items: center;
             flex-direction: column;
             flex-grow: 1;
             justify-content: center;
 
-            svg {
-                path {
-                    stroke-width: 8px;
-                    fill: transparent;
+            .rings {
+                width: 200px;
 
-                    &.income-ring {
-                        stroke: $color-success;
-                    }
+                .income {
+                    stroke: $color-success;
+                }
 
-                    &.expense-ring {
-                        stroke: $color-danger;
-                    }
+                .expense {
+                    stroke: $color-danger;
                 }
             }
 
-            .summary {
-                display: flex;
-                flex-direction: column;
-                width: 160px;
+            .table {
+                display: table;
+                border-collapse: separate;
+                border-spacing: 16px 0px;
 
                 .income,
                 .expense {
-                    display: flex;
-                    align-items: center;
-                    flex-grow: 1;
-                    justify-content: space-between;
+                    display: table-row;
+
+                    .label {
+                        display: table-cell;
+                    }
 
                     .amount {
+                        display: table-cell;
+                        text-align: right;
                         font-family: $font-family-monospace;
-                        font-size: 20px;
                     }
                 }
 
@@ -60,45 +59,19 @@
             }
         }
 
-        .planned-vs-actual {
+        .estimations {
             margin-top: 48px;
-
-            .planned,
-            .actual {
-                margin-bottom: 6px;
-
-                .bar {
-                    height: 10px;
-                }
-
-                .summary {
-                    display: flex;
-                    align-items: center;
-                    width: 100%;
-                    color: rgba(0, 0, 0, 0.7);
-                    font-size: 16px;
-
-                    .label {
-                        &::after {
-                            content: ':';
-                        }
-                    }
-
-                    .amount {
-                        margin-left: 4px;
-                        font-family: $font-family-monospace;
-                    }
-                }
-            }
+            color: rgba(0, 0, 0, 0.7);
+            font-size: 14px;
 
             .planned {
-                .bar {
+                :global .rect {
                     background-color: $color-success;
                 }
             }
 
             .actual {
-                .bar {
+                :global .rect {
                     background-color: $color-danger;
                 }
             }

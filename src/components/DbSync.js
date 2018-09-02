@@ -66,8 +66,11 @@ export default class DbSync extends React.PureComponent {
 
     componentDidMount() {
         this.refreshToken();
-        this.fetchCategories();
-        this.fetchActivities();
+
+        if (this.props.tokens.access) {
+            this.fetchCategories();
+            this.fetchActivities();
+        }
     }
 
     componentWillReceiveProps(nextProps) {

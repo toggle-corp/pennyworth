@@ -3,23 +3,28 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import FloatingActionLink from '#components/FloatingActionLink';
+import Rings from '#components/Rings';
+import Bars from '#components/Bars';
+
 import {
     incomeSelector,
     expenseSelector,
+    estimationListSelector,
 } from '#redux/combined';
 
-import { describeArc } from '#utils/common';
 import styles from './styles.scss';
 
 
 const propTypes = {
     income: PropTypes.number.isRequired,
     expense: PropTypes.number.isRequired,
+    estimationList: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 const mapStateToProps = state => ({
     income: incomeSelector(state),
     expense: expenseSelector(state),
+    estimationList: estimationListSelector(state),
 });
 
 
@@ -27,45 +32,27 @@ const mapStateToProps = state => ({
 export default class Dashboard extends React.PureComponent {
     static propTypes = propTypes;
 
-    renderRings = () => {
+    renderSummary = () => {
         const {
             income,
             expense,
         } = this.props;
 
-        let incomeAngle;
-        let expenseAngle;
-
-        if (income > expense) {
-            incomeAngle = 359.99;
-            expenseAngle = (expense / income) * 360;
-        } else {
-            expenseAngle = 359.99;
-            incomeAngle = (income / expense) * 360;
-        }
-
-        const incomePath = describeArc(100, 100, 80, 0, incomeAngle);
-        const expensePath = describeArc(100, 100, 65, 0, expenseAngle);
+        const rings = [
+            { key: 'income', amount: income, className: styles.income },
+            { key: 'expense', amount: expense, className: styles.expense },
+        ];
 
         return (
-            <div className={styles.rings}>
-                <svg width="200" height="200">
-                    <path
-                        className={styles.incomeRing}
-                        d={incomePath}
-                    />
-                    <path
-                        className={styles.expenseRing}
-                        d={expensePath}
-                    />
-                </svg>
-                <div className={styles.summary}>
+            <div className={styles.summary}>
+                <Rings className={styles.rings} rings={rings} />
+                <div className={styles.table}>
                     <div className={styles.income}>
-                        <span> Income </span>
+                        <span className={styles.label}> Total Income </span>
                         <span className={styles.amount}> {income} </span>
                     </div>
                     <div className={styles.expense}>
-                        <span> Expense </span>
+                        <span className={styles.label}> Total Expense </span>
                         <span className={styles.amount}> {expense} </span>
                     </div>
                 </div>
@@ -73,54 +60,34 @@ export default class Dashboard extends React.PureComponent {
         );
     }
 
-    renderPlanVsActual = () => {
-        const planned = 0;
-        const actual = 200;
+    renderEstimations = () => {
+        const planned = this.props.estimationList
+            .reduce((acc, c) => acc + (c.plannedAmount || 0), 0);
+        const actual = this.props.estimationList
+            .reduce((acc, c) => acc + (c.actualAmount || 0), 0);
 
-        if (planned === 0) {
-            return null;
-        }
-
-        let plannedWidth;
-        let actualWidth;
-
-        if (planned > actual) {
-            plannedWidth = 100;
-            actualWidth = (actual / planned) * 100;
-        } else {
-            actualWidth = 100;
-            plannedWidth = (planned / actual) * 100;
-        }
+        const bars = [
+            { key: 'Planned', amount: planned, className: styles.planned },
+            { key: 'Actual', amount: actual, className: styles.actual },
+        ];
 
         return (
-            <div className={styles.plannedVsActual}>
-                <div className={styles.planned}>
-                    <div className={styles.summary}>
-                        <div className={styles.label}> Planned </div>
-                        <div className={styles.amount}> {planned} </div>
-                    </div>
-                    <div className={styles.bar} style={{ width: `${plannedWidth}%` }} />
-                </div>
-                <div className={styles.actual}>
-                    <div className={styles.summary}>
-                        <div className={styles.label}> Actual </div>
-                        <div className={styles.amount}> {actual} </div>
-                    </div>
-                    <div className={styles.bar} style={{ width: `${actualWidth}%` }} />
-                </div>
-            </div>
+            <Bars
+                className={styles.estimations}
+                bars={bars}
+            />
         );
     }
 
     render() {
-        const Rings = this.renderRings;
-        const PlanVsActual = this.renderPlanVsActual;
+        const Summary = this.renderSummary;
+        const Estimations = this.renderEstimations;
 
         return (
             <div className={styles.dashboard}>
                 <div className={styles.body}>
-                    <Rings />
-                    <PlanVsActual />
+                    <Summary />
+                    <Estimations />
                 </div>
                 <FloatingActionLink
                     to={{

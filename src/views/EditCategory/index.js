@@ -69,13 +69,13 @@ export default class EditCategory extends React.PureComponent {
     constructor(props) {
         super(props);
 
-        let initialData = {};
+        this.initialData = {};
         if (props.categoryKey) {
-            initialData = props.categories[props.categoryKey];
+            this.initialData = props.categories[props.categoryKey];
         }
 
         this.state = {
-            faramValues: initialData,
+            faramValues: this.initialData,
             faramErrors: {},
         };
 
@@ -83,6 +83,7 @@ export default class EditCategory extends React.PureComponent {
             fields: {
                 title: [requiredCondition],
                 activityType: [requiredCondition],
+                plannedAmount: [],
             },
         };
     }
@@ -101,7 +102,9 @@ export default class EditCategory extends React.PureComponent {
         if (this.props.categoryKey) {
             this.props.editCategory({
                 key: this.props.categoryKey,
+                ...this.initialData,
                 ...values,
+                sync: false,
             });
         } else {
             this.props.addCategory(values);
@@ -175,6 +178,12 @@ export default class EditCategory extends React.PureComponent {
                 faramElementName="activityType"
                 label="Type"
                 options={categoryTypeOptions}
+            />
+            <TextInput
+                className={styles.formItem}
+                faramElementName="plannedAmount"
+                label="Planned amount"
+                type="number"
             />
         </div>
     )

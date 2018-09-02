@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect';
-import { categoriesSelector } from './categories';
+import { categoriesSelector, categoryListSelector } from './categories';
 import { activityListSelector } from './activities';
 
 
@@ -30,5 +30,18 @@ export const expenseSelector = createSelector(
             return acc;
         },
         0,
+    ),
+);
+
+export const estimationListSelector = createSelector(
+    categoryListSelector,
+    activityListSelector,
+    (categoryList, activityList) => categoryList.map(
+        c => ({
+            ...c,
+            actualAmount: c.plannedAmount === 0 ? 0 : activityList
+                .filter(a => a.category === c.key)
+                .reduce((acc, a) => acc + a.amount, 0),
+        }),
     ),
 );
