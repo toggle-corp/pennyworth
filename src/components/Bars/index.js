@@ -51,17 +51,8 @@ export default class Bars extends React.PureComponent {
             <div
                 key={bar.key}
                 className={className}
-            >
-                <div className={`${styles.label} label`}>
-                    <div className={`${styles.title} title`}>
-                        {bar.key}
-                    </div>
-                    <div className={`${styles.amount} amount`}>
-                        {bar.amount}
-                    </div>
-                </div>
-                <div className={`${styles.rect} rect`} style={{ width: `${width}%` }} />
-            </div>
+                style={{ width: `${width}%` }}
+            />
         );
     }
 

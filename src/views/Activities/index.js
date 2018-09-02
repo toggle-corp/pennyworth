@@ -25,6 +25,11 @@ export default class Activities extends React.PureComponent {
 
     renderItem = (activity) => {
         const category = this.props.categories[activity.category] || emptyObject;
+        const classNames = [
+            styles[category.activityType],
+            styles.item,
+        ];
+        const className = classNames.join(' ');
 
         return (
             <Link
@@ -33,7 +38,7 @@ export default class Activities extends React.PureComponent {
                     state: { fromApp: true },
                 }}
                 key={activity.key}
-                className={styles.item}
+                className={className}
             >
                 <div className={styles.summary}>
                     <div className={styles.title}>
@@ -43,7 +48,7 @@ export default class Activities extends React.PureComponent {
                         {category.title}
                     </div>
                     <div className={styles.date}>
-                        {activity.date}
+                        {new Date(activity.date).toLocaleDateString()}
                     </div>
                 </div>
                 <div className={styles.amount}>

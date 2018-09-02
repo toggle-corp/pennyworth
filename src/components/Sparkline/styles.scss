@@ -1,0 +1,12 @@
+@import '../../stylesheets/base';
+
+.sparkline {
+    width: 100%;
+    height: 100%;
+
+    path {
+        fill: transparent;
+        stroke-width: 1.4px;
+        stroke: $color-primary;
+    }
+}

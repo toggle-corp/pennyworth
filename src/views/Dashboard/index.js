@@ -2,8 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import sampleAvatar from '#images/sample-avatar.png';
 import FloatingActionLink from '#components/FloatingActionLink';
 import Rings from '#components/Rings';
+import Sparkline from '#components/Sparkline';
 import Bars from '#components/Bars';
 
 import {
@@ -12,6 +14,7 @@ import {
     estimationListSelector,
 } from '#redux/combined';
 
+import getSampleData from './sampleData';
 import styles from './styles.scss';
 
 
@@ -27,6 +30,9 @@ const mapStateToProps = state => ({
     estimationList: estimationListSelector(state),
 });
 
+
+const incomeData = getSampleData();
+const expenseData = getSampleData();
 
 @connect(mapStateToProps)
 export default class Dashboard extends React.PureComponent {
@@ -46,14 +52,17 @@ export default class Dashboard extends React.PureComponent {
         return (
             <div className={styles.summary}>
                 <Rings className={styles.rings} rings={rings} />
+                <div className={styles.avatar}>
+                    <img src={sampleAvatar} alt="avatar" />
+                </div>
                 <div className={styles.table}>
                     <div className={styles.income}>
-                        <span className={styles.label}> Total Income </span>
                         <span className={styles.amount}> {income} </span>
+                        <span className={styles.label}> Total Income </span>
                     </div>
                     <div className={styles.expense}>
-                        <span className={styles.label}> Total Expense </span>
                         <span className={styles.amount}> {expense} </span>
+                        <span className={styles.label}> Total Expense </span>
                     </div>
                 </div>
             </div>
@@ -72,22 +81,55 @@ export default class Dashboard extends React.PureComponent {
         ];
 
         return (
-            <Bars
-                className={styles.estimations}
-                bars={bars}
-            />
+            <div className={styles.estimations}>
+                <div className={styles.planned}>
+                    <span className={styles.amount}> {planned} </span>
+                    <span className={styles.label}> Planned </span>
+                </div>
+                <Bars
+                    className={styles.bars}
+                    bars={bars}
+                />
+                <div className={styles.actual}>
+                    <span className={styles.amount}> {actual} </span>
+                    <span className={styles.label}> Actual </span>
+                </div>
+            </div>
         );
     }
+
+    renderTimeseries = () => (
+        <div className={styles.timeseries}>
+            <Sparkline
+                className={styles.income}
+                data={incomeData}
+            />
+            <Sparkline
+                className={styles.expense}
+                data={expenseData}
+            />
+            <div className={styles.axis}>
+                <span className={styles.date}>
+                    {incomeData[0].time.toLocaleDateString()}
+                </span>
+                <span className={styles.date}>
+                    {incomeData[incomeData.length - 1].time.toLocaleDateString()}
+                </span>
+            </div>
+        </div>
+    )
 
     render() {
         const Summary = this.renderSummary;
         const Estimations = this.renderEstimations;
+        const Timeseries = this.renderTimeseries;
 
         return (
             <div className={styles.dashboard}>
                 <div className={styles.body}>
                     <Summary />
                     <Estimations />
+                    <Timeseries />
                 </div>
                 <FloatingActionLink
                     to={{

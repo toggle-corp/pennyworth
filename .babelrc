@@ -38,6 +38,7 @@
                     "#rsu": "./src/vendor/react-store/utils",
                     "#rsk": "./src/vendor/react-store/constants",
                     "#ravl": "./src/vendor/ravl",
+                    "#images": "./src/resources/images",
                     "#components": "./src/components",
                     "#views": "./src/views",
                     "#config": "./src/config",

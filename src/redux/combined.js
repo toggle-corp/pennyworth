@@ -36,12 +36,14 @@ export const expenseSelector = createSelector(
 export const estimationListSelector = createSelector(
     categoryListSelector,
     activityListSelector,
-    (categoryList, activityList) => categoryList.map(
-        c => ({
-            ...c,
-            actualAmount: c.plannedAmount === 0 ? 0 : activityList
-                .filter(a => a.category === c.key)
-                .reduce((acc, a) => acc + a.amount, 0),
-        }),
-    ),
+    (categoryList, activityList) => categoryList
+        .filter(c => c.activityType === 'expense')
+        .map(
+            c => ({
+                ...c,
+                actualAmount: c.plannedAmount === 0 ? 0 : activityList
+                    .filter(a => a.category === c.key)
+                    .reduce((acc, a) => acc + a.amount, 0),
+            }),
+        ),
 );

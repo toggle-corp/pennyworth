@@ -7,11 +7,13 @@
 
     .body {
         display: flex;
+        align-items: center;
         flex-direction: column;
         padding: 16px;
 
         .summary {
             display: flex;
+            position: relative;
             align-items: center;
             flex-direction: column;
             flex-grow: 1;
@@ -29,23 +31,43 @@
                 }
             }
 
+            .avatar {
+                position: absolute;
+                top: 32px;
+                z-index: -10;
+                border-radius: 50%;
+                width: 150px;
+                height: 150px;
+                overflow: hidden;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                    object-position: center center;
+                }
+            }
+
             .table {
-                display: table;
-                border-collapse: separate;
-                border-spacing: 16px 0px;
+                display: flex;
+                justify-content: space-around;
+                margin-top: 8px;
+                width: 250px;
 
                 .income,
                 .expense {
-                    display: table-row;
-
-                    .label {
-                        display: table-cell;
-                    }
+                    display: flex;
+                    align-items: center;
+                    flex-direction: column;
 
                     .amount {
-                        display: table-cell;
-                        text-align: right;
                         font-family: $font-family-monospace;
+                        font-size: 24px;
+                    }
+
+                    .label {
+                        color: rgba(0, 0, 0, 0.5);
+                        font-weight: 300;
                     }
                 }
 
@@ -60,19 +82,99 @@
         }
 
         .estimations {
+            display: flex;
+            align-items: center;
+            justify-content: center;
             margin-top: 48px;
             color: rgba(0, 0, 0, 0.7);
-            font-size: 14px;
 
-            .planned {
-                :global .rect {
-                    background-color: $color-success;
+            .planned, .actual {
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+
+                .amount {
+                    font-family: $font-family-monospace;
+                    font-size: 18px;
+                }
+
+                .label {
+                    color: rgba(0, 0, 0, 0.5);
+                    font-size: 14px;
+                    font-weight: 300;
                 }
             }
 
+            .planned {
+                color: $color-success;
+            }
+
             .actual {
-                :global .rect {
+                color: $color-danger;
+            }
+
+            .bars {
+                display: flex;
+                align-items: center;
+                flex-direction: column;
+                justify-content: center;
+                margin: 0 8px;
+                width: 110px;
+
+                .planned {
+                    background-color: $color-success;
+                }
+
+                .actual {
                     background-color: $color-danger;
+                }
+            }
+        }
+
+        .timeseries {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 48px;
+            width: 250px;
+            height: 72px;
+
+            .income {
+                height: 40%;
+
+                path {
+                    stroke: $color-success;
+                }
+            }
+
+            .expense {
+                margin-top: 8px;
+                height: 40%;
+
+                path {
+                    stroke: $color-warning;
+                }
+            }
+
+            .axis {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 8px;
+                width: 100%;
+
+                .date {
+                    color: rgba(0, 0, 0, 0.5);
+                    font-size: 12px;
+                    font-weight: 300;
+                }
+
+                .date:first-child {
+                    transform: translate(-50%, 0);
+                }
+
+                .date:last-child {
+                    transform: translate(50%, 0);
                 }
             }
         }

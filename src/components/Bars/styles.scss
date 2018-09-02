@@ -5,28 +5,7 @@
     height: 100%;
 
     .bar {
-        margin-bottom: 2px;
-
-        .label {
-            display: flex;
-            align-items: center;
-
-            .title {
-                text-transform: capitalize;
-
-                &::after {
-                    content: ':';
-                }
-            }
-
-            .amount {
-                margin-left: 4px;
-                font-family: $font-family-monospace;
-            }
-        }
-
-        .rect {
-            height: 2px;
-        }
+        margin-bottom: 4px;
+        height: 2px;
     }
 }
