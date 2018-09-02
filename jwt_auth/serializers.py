@@ -56,4 +56,5 @@ class TokenRefreshSerializer(serializers.Serializer):
         access_token = AccessToken.for_user(user)
         return {
             'access': access_token.encode(),
+            'refresh': data['refresh'],
         }

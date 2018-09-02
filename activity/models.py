@@ -7,3 +7,6 @@ class Activity(NamedResource):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     amount = models.FloatField()
     date = models.DateField(null=True, blank=True, default=None)
+
+    class Meta:
+        verbose_name_plural = 'Activities'
