@@ -1,38 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 import Request, { ApiPropType } from '#components/Request';
-import { toFaramError, api } from '#rest';
+import { toFaramError } from '#rest';
 
 import Faram, { requiredCondition } from '#rscg/Faram';
 import NonFieldErrors from '#rsci/NonFieldErrors';
 import TextInput from '#rsci/TextInput';
 import AccentButton from '#rsca/Button/AccentButton';
 
-import { setTokensAction } from '#redux/auth';
-
 import styles from './styles.scss';
 
 const propTypes = {
     api: ApiPropType.isRequired,
-    loginPending: PropTypes.bool,
-    setTokens: PropTypes.func.isRequired,
+    registerPending: PropTypes.bool,
 };
 
 const defaultProps = {
-    loginPending: false,
+    registerPending: false,
 };
-
-const mapDispatchToProps = dispatch => ({
-    setTokens: params => dispatch(setTokensAction(params)),
-});
 
 
 @Request
-@connect(undefined, mapDispatchToProps)
-export default class Login extends React.PureComponent {
+export default class Register extends React.PureComponent {
     static propTypes = propTypes;
     static defaultProps = defaultProps;
 
@@ -40,23 +31,28 @@ export default class Login extends React.PureComponent {
         super(props);
 
         this.state = {
+            redirectToLogin: false,
             faramValues: {},
             faramErrors: {},
         };
 
         this.schema = {
             fields: {
+                firstName: [requiredCondition],
+                lastName: [requiredCondition],
                 username: [requiredCondition],
                 password: [requiredCondition],
             },
         };
     }
 
-    handleLoginSuccess = (response) => {
-        this.props.setTokens(response);
+    handleRegisterSuccess = () => {
+        this.setState({
+            redirectToLogin: true,
+        });
     }
 
-    handleLoginFailure = (error) => {
+    handleRegisterFailure = (error) => {
         this.setState({
             faramErrors: toFaramError(error.errors),
         });
@@ -64,11 +60,10 @@ export default class Login extends React.PureComponent {
 
     handleFaramSuccess = (values) => {
         this.props.api.post({
-            key: 'login',
-            url: api('token'),
+            key: 'users',
             body: values,
-            onSuccess: this.handleLoginSuccess,
-            onFailure: this.handleLoginFailure,
+            onSuccess: this.handleRegisterSuccess,
+            onFailure: this.handleRegisterFailure,
         });
     }
 
@@ -86,7 +81,7 @@ export default class Login extends React.PureComponent {
     renderHeader = () => (
         <div className={styles.header}>
             <h1>
-                Login
+                Register
             </h1>
         </div>
     )
@@ -94,6 +89,16 @@ export default class Login extends React.PureComponent {
     renderForm = () => (
         <div className={styles.form}>
             <NonFieldErrors faramElement />
+            <TextInput
+                className={styles.formItem}
+                faramElementName="firstName"
+                label="First name"
+            />
+            <TextInput
+                className={styles.formItem}
+                faramElementName="lastName"
+                label="Last name"
+            />
             <TextInput
                 className={styles.formItem}
                 faramElementName="username"
@@ -109,7 +114,7 @@ export default class Login extends React.PureComponent {
                 type="submit"
                 transparent
             >
-                Login
+                Register
             </AccentButton>
         </div>
     )
@@ -118,31 +123,27 @@ export default class Login extends React.PureComponent {
         const Header = this.renderHeader;
         const Form = this.renderForm;
 
-        const { loginPending } = this.props;
+        const { registerPending } = this.props;
+
+        if (this.state.redirectToLogin) {
+            return (
+                <Redirect to="/login/" />
+            );
+        }
 
         return (
             <Faram
-                className={styles.login}
+                className={styles.register}
                 onValidationSuccess={this.handleFaramSuccess}
                 onValidationFailure={this.handleValidationFailure}
                 onChange={this.handleFaramChange}
                 schema={this.schema}
                 value={this.state.faramValues}
                 error={this.state.faramErrors}
-                disabled={loginPending}
+                disabled={registerPending}
             >
                 <Header />
                 <Form />
-                <div>
-                    <p> Or </p>
-                    <Link
-                        to={{
-                            pathname: '/register/',
-                        }}
-                    >
-                        Register
-                    </Link>
-                </div>
             </Faram>
         );
     }

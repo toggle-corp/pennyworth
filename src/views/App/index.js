@@ -10,6 +10,7 @@ import { tokensSelector } from '#redux/auth';
 import DbSync from '#components/DbSync';
 
 import Login from '#views/Login';
+import Register from '#views/Register';
 import Home from '#views/Home';
 import EditActivity from '#views/EditActivity';
 import EditCategory from '#views/EditCategory';
@@ -42,6 +43,12 @@ export default class App extends React.PureComponent {
                         <ExclusivelyPublicRoute
                             path="/login"
                             component={Login}
+                            authenticated={authenticated}
+                            redirectLink="/"
+                        />
+                        <ExclusivelyPublicRoute
+                            path="/register"
+                            component={Register}
                             authenticated={authenticated}
                             redirectLink="/"
                         />
