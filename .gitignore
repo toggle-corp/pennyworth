@@ -1,0 +1,6 @@
+# dotenv environment variables file
+.env*
+!.env-sample
+!.env-dev.enc
+!.env-prod.enc
+!.env-nightly.enc
