@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 
 import { iconNames } from '#rsk';
-import { categoryListSelector } from '#redux/categories';
+import { categorySortedListSelector } from '#redux/categories';
 import styles from './styles.scss';
 
 
@@ -13,7 +13,7 @@ const propTypes = {
 };
 
 const mapStateToProps = state => ({
-    categoryList: categoryListSelector(state),
+    categoryList: categorySortedListSelector(state),
 });
 
 @connect(mapStateToProps)

@@ -32,6 +32,13 @@ export const categoryListSelector = createSelector(
     })),
 );
 
+export const categorySortedListSelector = createSelector(
+    categoryListSelector,
+    categoryList => categoryList.sort((a, b) => (
+        new Date(a.createdAt) - new Date(b.createdAt)
+    )),
+);
+
 
 const ADD_CATEGORY = 'categories/ADD_CATEGORY';
 const EDIT_CATEGORY = 'categories/EDIT_CATEGORY';

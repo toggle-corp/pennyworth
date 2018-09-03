@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from category.utils import create_categories_for
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -12,6 +13,8 @@ class UserSerializer(serializers.ModelSerializer):
         user = super(UserSerializer, self).create(validated_data)
         user.set_password(validated_data['password'])
         user.save()
+
+        create_categories_for(user)
         return user
 
     def update(self, instance, validated_data):
