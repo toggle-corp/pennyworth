@@ -1,0 +1,37 @@
+version: '3.2'
+
+services:
+    db:
+        image: postgres:9.6
+        volumes:
+            - postgres-data:/var/lib/postgresql/data
+
+    server:
+        build: ./server/
+        env_file:
+            - .env
+        command: bash -c '/code/scripts/wait-for-it.sh db:5432 && /code/scripts/run_develop.sh'
+        volumes:
+            - ./server/:/code
+            - media:/media
+        ports:
+            - '8006:8006'
+        depends_on:
+            - db
+
+    client:
+        build: ./client/
+        env_file:
+            - .env
+        environment:
+          - PORT=3006
+          - REACT_APP_API_ENDPOINT=http://localhost:8006
+        command: bash -c '/code/scripts/run_develop.sh'
+        volumes:
+            - ./client/:/code
+        ports:
+            - '3006:3006'
+
+volumes:
+  media:
+  postgres-data:

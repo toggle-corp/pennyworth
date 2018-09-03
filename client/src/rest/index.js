@@ -1,6 +1,7 @@
 import jwtDecode from 'jwt-decode';
 
-export const endpoint = 'http://localhost:8000/api/v1/';
+export const baseEndpoint = process.env.REACT_APP_API_ENDPOINT;
+export const endpoint = `${baseEndpoint}/api/v1/`;
 
 export const api = key => `${endpoint}${key}/`;
 

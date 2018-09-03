@@ -1,0 +1,14 @@
+#### Required Environment Variables in Travis:
+
+```
+# For General
+DOCKER_USERNAME=
+DOCKER_PASSWORD=
+
+# For Deploy
+PENNYWORTH_RC_BRANCH=
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+DEPLOYMENT_REGION=
+PENNYWORTH_S3_BUCKET=
+```
