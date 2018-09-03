@@ -47,3 +47,65 @@ export const estimationListSelector = createSelector(
             }),
         ),
 );
+
+
+export const incomeSeriesSelector = createSelector(
+    categoriesSelector,
+    activityListSelector,
+    (categories, activityList) => {
+        const today = new Date();
+        const y = today.getFullYear();
+        const m = today.getMonth();
+
+        const startDate = new Date(y, m, 1);
+        const endDate = new Date(y, m + 1, 0);
+
+        const date = startDate;
+        const series = [];
+        while (date <= endDate) {
+            const dateString = date.toLocaleDateString();
+            const amount = activityList.filter(a => (
+                new Date(a.date).toLocaleDateString() === dateString &&
+                categories[a.category].activityType === 'income'
+            )).reduce((acc, a) => acc + a.amount, 0);
+
+            series.push({
+                amount,
+                time: new Date(date),
+            });
+            date.setDate(date.getDate() + 1);
+        }
+
+        return series;
+    },
+);
+export const expenseSeriesSelector = createSelector(
+    categoriesSelector,
+    activityListSelector,
+    (categories, activityList) => {
+        const today = new Date();
+        const y = today.getFullYear();
+        const m = today.getMonth();
+
+        const startDate = new Date(y, m, 1);
+        const endDate = new Date(y, m + 1, 0);
+
+        const date = startDate;
+        const series = [];
+        while (date <= endDate) {
+            const dateString = date.toLocaleDateString();
+            const amount = activityList.filter(a => (
+                new Date(a.date).toLocaleDateString() === dateString &&
+                categories[a.category].activityType === 'expense'
+            )).reduce((acc, a) => acc + a.amount, 0);
+
+            series.push({
+                amount,
+                time: new Date(date),
+            });
+            date.setDate(date.getDate() + 1);
+        }
+
+        return series;
+    },
+);

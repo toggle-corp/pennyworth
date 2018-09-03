@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import FormattedDate from '#rscv/FormattedDate/FormattedDate';
+
 import sampleAvatar from '#images/sample-avatar.png';
 import FloatingActionLink from '#components/FloatingActionLink';
 import Rings from '#components/Rings';
@@ -11,28 +13,38 @@ import Bars from '#components/Bars';
 import {
     incomeSelector,
     expenseSelector,
+    incomeSeriesSelector,
+    expenseSeriesSelector,
     estimationListSelector,
 } from '#redux/combined';
 
-import getSampleData from './sampleData';
 import styles from './styles.scss';
 
 
 const propTypes = {
     income: PropTypes.number.isRequired,
     expense: PropTypes.number.isRequired,
+    incomeSeries: PropTypes.arrayOf(PropTypes.shape({
+        time: PropTypes.instanceOf(Date),
+        amount: PropTypes.number,
+    })).isRequired,
+    expenseSeries: PropTypes.arrayOf(PropTypes.shape({
+        time: PropTypes.instanceOf(Date),
+        amount: PropTypes.number,
+    })).isRequired,
     estimationList: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 const mapStateToProps = state => ({
     income: incomeSelector(state),
     expense: expenseSelector(state),
+    incomeSeries: incomeSeriesSelector(state),
+    expenseSeries: expenseSeriesSelector(state),
     estimationList: estimationListSelector(state),
 });
 
 
-const incomeData = getSampleData();
-const expenseData = getSampleData();
+const formatDate = date => FormattedDate.format(date, 'MMM dd');
 
 @connect(mapStateToProps)
 export default class Dashboard extends React.PureComponent {
@@ -98,26 +110,33 @@ export default class Dashboard extends React.PureComponent {
         );
     }
 
-    renderTimeseries = () => (
-        <div className={styles.timeseries}>
-            <Sparkline
-                className={styles.income}
-                data={incomeData}
-            />
-            <Sparkline
-                className={styles.expense}
-                data={expenseData}
-            />
-            <div className={styles.axis}>
-                <span className={styles.date}>
-                    {incomeData[0].time.toLocaleDateString()}
-                </span>
-                <span className={styles.date}>
-                    {incomeData[incomeData.length - 1].time.toLocaleDateString()}
-                </span>
+    renderTimeseries = () => {
+        const {
+            incomeSeries,
+            expenseSeries,
+        } = this.props;
+
+        return (
+            <div className={styles.timeseries}>
+                <Sparkline
+                    className={styles.income}
+                    data={incomeSeries}
+                />
+                <Sparkline
+                    className={styles.expense}
+                    data={expenseSeries}
+                />
+                <div className={styles.axis}>
+                    <span className={styles.date}>
+                        {formatDate(incomeSeries[0].time)}
+                    </span>
+                    <span className={styles.date}>
+                        {formatDate(incomeSeries[incomeSeries.length - 1].time)}
+                    </span>
+                </div>
             </div>
-        </div>
-    )
+        );
+    }
 
     render() {
         const Summary = this.renderSummary;

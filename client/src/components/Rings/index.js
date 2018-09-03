@@ -40,7 +40,7 @@ export default class Rings extends React.PureComponent {
     renderRing = (ring, index) => {
         const max = getMaxValue(this.props.rings);
         const angle = (max === ring.amount) ? 359.999 : (ring.amount / max) * 360;
-        const path = describeArc(50, 50, 48 - (index * 4), 0, angle);
+        const path = describeArc(50, 50, 48 - (index * 3), 0, angle);
 
         const classNames = [
             'ring',

@@ -133,7 +133,7 @@ export default class Login extends React.PureComponent {
             >
                 <Header />
                 <Form />
-                <div>
+                <div className={styles.registerSection}>
                     <p> Or </p>
                     <Link
                         to={{
