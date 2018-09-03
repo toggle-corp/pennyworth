@@ -17,6 +17,7 @@ class Category(NamedResource):
     )
     planned_amount = models.FloatField(
         default=0,
+        null=True,
         blank=True,
     )
 

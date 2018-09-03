@@ -11,6 +11,7 @@ import DbSync from '#components/DbSync';
 
 import Login from '#views/Login';
 import Register from '#views/Register';
+import Profile from '#views/Profile';
 import Home from '#views/Home';
 import EditActivity from '#views/EditActivity';
 import EditCategory from '#views/EditCategory';
@@ -57,6 +58,11 @@ export default class App extends React.PureComponent {
                             component={Home}
                             authenticated={authenticated}
                             exact
+                        />
+                        <PrivateRoute
+                            path="/profile"
+                            component={Profile}
+                            authenticated={authenticated}
                         />
                         <PrivateRoute
                             path="/edit-activity/:key?"

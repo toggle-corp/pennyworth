@@ -135,11 +135,7 @@ export default class Login extends React.PureComponent {
                 <Form />
                 <div className={styles.registerSection}>
                     <p> Or </p>
-                    <Link
-                        to={{
-                            pathname: '/register/',
-                        }}
-                    >
+                    <Link to="/register/">
                         Register
                     </Link>
                 </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import FormattedDate from '#rscv/FormattedDate/FormattedDate';
 
@@ -65,7 +66,9 @@ export default class Dashboard extends React.PureComponent {
             <div className={styles.summary}>
                 <Rings className={styles.rings} rings={rings} />
                 <div className={styles.avatar}>
-                    <img src={sampleAvatar} alt="avatar" />
+                    <Link to="/profile/">
+                        <img src={sampleAvatar} alt="avatar" />
+                    </Link>
                 </div>
                 <div className={styles.table}>
                     <div className={styles.income}>
