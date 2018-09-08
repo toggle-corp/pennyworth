@@ -3,9 +3,23 @@ import { categoriesSelector, categoryListSelector } from './categories';
 import { activityListSelector } from './activities';
 
 
+export const monthlyActivityListSelector = createSelector(
+    activityListSelector,
+    (activityList) => {
+        const today = new Date();
+        const thisYear = today.getFullYear();
+        const thisMonth = today.getMonth();
+        return activityList.filter(a => (
+            new Date(a.date).getMonth() === thisMonth &&
+            new Date(a.date).getFullYear() === thisYear
+        ));
+    },
+);
+
+
 export const incomeSelector = createSelector(
     categoriesSelector,
-    activityListSelector,
+    monthlyActivityListSelector,
     (categories, activityList) => activityList.reduce(
         (acc, a) => {
             const category = categories[a.category];
@@ -20,7 +34,7 @@ export const incomeSelector = createSelector(
 
 export const expenseSelector = createSelector(
     categoriesSelector,
-    activityListSelector,
+    monthlyActivityListSelector,
     (categories, activityList) => activityList.reduce(
         (acc, a) => {
             const category = categories[a.category];
@@ -35,7 +49,7 @@ export const expenseSelector = createSelector(
 
 export const estimationListSelector = createSelector(
     categoryListSelector,
-    activityListSelector,
+    monthlyActivityListSelector,
     (categoryList, activityList) => categoryList
         .filter(c => c.activityType === 'expense')
         .map(
@@ -51,7 +65,7 @@ export const estimationListSelector = createSelector(
 
 export const incomeSeriesSelector = createSelector(
     categoriesSelector,
-    activityListSelector,
+    monthlyActivityListSelector,
     (categories, activityList) => {
         const today = new Date();
         const y = today.getFullYear();
@@ -81,7 +95,7 @@ export const incomeSeriesSelector = createSelector(
 );
 export const expenseSeriesSelector = createSelector(
     categoriesSelector,
-    activityListSelector,
+    monthlyActivityListSelector,
     (categories, activityList) => {
         const today = new Date();
         const y = today.getFullYear();

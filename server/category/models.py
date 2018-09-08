@@ -1,4 +1,6 @@
 from resource.models import NamedResource, models
+from django.dispatch import receiver
+from django.utils import timezone
 
 
 class Category(NamedResource):
@@ -23,3 +25,42 @@ class Category(NamedResource):
 
     class Meta:
         verbose_name_plural = 'Categories'
+
+
+class PlannedAmountHistory(models.Model):
+    category = models.ForeignKey(Category,
+                                 on_delete=models.CASCADE)
+    month = models.IntegerField()
+    year = models.IntegerField()
+    amount = models.FloatField(
+        default=0,
+        null=True,
+        blank=True,
+    )
+
+    def __str__(self):
+        return '{} - {}/{}: {}'.format(
+            str(self.category),
+            self.year,
+            self.month,
+            self.amount
+        )
+
+    class Meta:
+        verbose_name_plural = 'Planned Amount Histories'
+
+
+@receiver(models.signals.post_save, sender=Category)
+def refresh_history(sender, instance, **kwargs):
+    now = timezone.now()
+    year = now.year
+    month = now.month
+
+    PlannedAmountHistory.objects.update_or_create(
+        year=year,
+        month=month,
+        category=instance,
+        defaults={
+            'amount': instance.planned_amount,
+        },
+    )

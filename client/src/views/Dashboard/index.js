@@ -73,11 +73,11 @@ export default class Dashboard extends React.PureComponent {
                 <div className={styles.table}>
                     <div className={styles.income}>
                         <span className={styles.amount}> {income} </span>
-                        <span className={styles.label}> Total Income </span>
+                        <span className={styles.label}> Income </span>
                     </div>
                     <div className={styles.expense}>
                         <span className={styles.amount}> {expense} </span>
-                        <span className={styles.label}> Total Expense </span>
+                        <span className={styles.label}> Expense </span>
                     </div>
                 </div>
             </div>
