@@ -1,7 +1,11 @@
 from collections import OrderedDict, defaultdict
+import base64
+import uuid
+import imghdr
 
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.contenttypes.models import ContentType
+from django.core.files.base import ContentFile
 from django.db.models import ProtectedError, FieldDoesNotExist
 from django.db.models.fields.related import ForeignObjectRel
 from django.utils.translation import ugettext_lazy as _
@@ -38,6 +42,28 @@ class RemoveNullFieldsMixin:
                 if field in data and not data.get(field):
                     data[field] = ''
         return super(RemoveNullFieldsMixin, self).to_internal_value(data)
+
+
+class FileField(serializers.FileField):
+    def to_internal_value(self, data):
+        if isinstance(data, str):
+            if 'data:' in data and ';base64,' in data:
+                header, data = data.split(';base64,')
+            try:
+                decoded_file = base64.b64decode(data)
+            except TypeError:
+                self.fail('invalid_image')
+
+            filename = str(
+                str(uuid.uuid4())[:12]
+            )
+            ext = self.get_file_extension(filename, decoded_file)
+            complete_filename = '{}.{}'.format(filename, ext)
+            data = ContentFile(decoded_file, name=complete_filename)
+        return super(FileField, self).to_internal_value(data)
+
+    def get_file_extension(self, file_name, decoded_file):
+        return imghdr.what(file_name, decoded_file)
 
 
 class ListToDictField(serializers.Field):

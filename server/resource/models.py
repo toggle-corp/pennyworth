@@ -2,6 +2,13 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
+class KeyBasedModel(models.Model):
+    key = models.CharField(max_length=255, unique=True)
+
+    class Meta:
+        abstract = True
+
+
 class Resource(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     key = models.CharField(max_length=255, unique=True)

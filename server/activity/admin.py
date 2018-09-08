@@ -1,5 +1,14 @@
 from django.contrib import admin
-from activity.models import Activity
+from activity.models import Activity, ActivityFile
 
 
-admin.site.register(Activity)
+class ActivityFileInline(admin.TabularInline):
+    model = ActivityFile
+    extra = 0
+
+
+class ActivityAdmin(admin.ModelAdmin):
+    inlines = [ActivityFileInline]
+
+
+admin.site.register(Activity, ActivityAdmin)

@@ -1,12 +1,8 @@
 from rest_framework import serializers
 
 
-class ResourceSerializer(serializers.ModelSerializer):
+class KeyBasedSerializer(serializers.ModelSerializer):
     key = serializers.CharField()
-    deleted = serializers.BooleanField(required=False)
-    created_at = serializers.DateTimeField(read_only=True)
-    modified_at = serializers.DateTimeField(read_only=True)
-    user = serializers.PrimaryKeyRelatedField(read_only=True)
 
     def create(self, validated_data):
         ModelClass = self.Meta.model
@@ -15,7 +11,16 @@ class ResourceSerializer(serializers.ModelSerializer):
         if item:
             validated_data['id'] = item.id
             return self.update(item, validated_data)
+        return super(KeyBasedSerializer, self).create(validated_data)
 
+
+class ResourceSerializer(KeyBasedSerializer):
+    deleted = serializers.BooleanField(required=False)
+    created_at = serializers.DateTimeField(read_only=True)
+    modified_at = serializers.DateTimeField(read_only=True)
+    user = serializers.PrimaryKeyRelatedField(read_only=True)
+
+    def create(self, validated_data):
         validated_data['user'] = self.context['request'].user
         return super(ResourceSerializer, self).create(validated_data)
 
