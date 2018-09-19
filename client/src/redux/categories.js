@@ -53,7 +53,7 @@ export const addCategoryAction = ({ title, activityType, plannedAmount }) => ({
 
 export const editCategoryAction = ({
     key, title, activityType, plannedAmount,
-    createdAt, modifiedAt, sync = false,
+    createdAt, modifiedAt, deleted = false, sync = false,
 }) => ({
     type: EDIT_CATEGORY,
     key,
@@ -62,6 +62,7 @@ export const editCategoryAction = ({
     plannedAmount,
     createdAt,
     modifiedAt,
+    deleted,
     sync,
 });
 
@@ -88,7 +89,16 @@ const addCategory = (state, action) => {
 };
 
 const editCategory = (state, action) => {
-    const { key, title, activityType, plannedAmount, createdAt, modifiedAt, sync } = action;
+    const {
+        key,
+        title,
+        activityType,
+        plannedAmount,
+        createdAt,
+        modifiedAt,
+        deleted,
+        sync,
+    } = action;
     const settings = {
         categories: { $auto: {
             [key]: { $set: {
@@ -97,6 +107,7 @@ const editCategory = (state, action) => {
                 plannedAmount,
                 createdAt,
                 modifiedAt,
+                deleted,
                 sync,
             } },
         } },

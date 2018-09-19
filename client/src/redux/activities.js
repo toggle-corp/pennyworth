@@ -52,7 +52,8 @@ export const addActivityAction = ({ title, amount, category, date }) => ({
 });
 
 export const editActivityAction = ({
-    key, title, amount, category, date, createdAt, modifiedAt, sync = false,
+    key, title, amount, category, date, createdAt, modifiedAt,
+    deleted = false, sync = false,
 }) => ({
     type: EDIT_ACTIVITY,
     key,
@@ -62,6 +63,7 @@ export const editActivityAction = ({
     date,
     createdAt,
     modifiedAt,
+    deleted,
     sync,
 });
 
@@ -89,7 +91,18 @@ const addActivity = (state, action) => {
 };
 
 const editActivity = (state, action) => {
-    const { key, title, amount, category, date, createdAt, modifiedAt, sync } = action;
+    const {
+        key,
+        title,
+        amount,
+        category,
+        date,
+        createdAt,
+        modifiedAt,
+        deleted = false,
+        sync,
+    } = action;
+
     const settings = {
         activities: { $auto: {
             [key]: { $set: {
@@ -99,6 +112,7 @@ const editActivity = (state, action) => {
                 date,
                 createdAt,
                 modifiedAt,
+                deleted,
                 sync,
             } },
         } },
